@@ -1,0 +1,35 @@
+JFDML JFormDesigner: "5.2.0.0.109" Java: "1.7.0_55" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {par l {seq l {space :p:86:p, comp buttonNie:::p::p, space :::p, comp buttonTak:::p::p}, seq l {space :p:93:p, comp labelTytul:::p::p}}, space ::88:x}}"
+			"$verticalGroup": "par l {seq t {space :p:12:p, comp labelTytul:::p::p, space :::p, par b {comp buttonNie::b:p::p, comp buttonTak::b:p::p}, space ::16:x}}"
+		} ) {
+			name: "this"
+			"$locationPolicy": 0
+			"$sizePolicy": 1
+			"modalityType": enum java.awt.Dialog$ModalityType APPLICATION_MODAL
+			"modal": true
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "buttonNie"
+				"text": "Nie"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonNieActionPerformed", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "buttonTak"
+				"text": "Tak"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonTakActionPerformed", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "labelTytul"
+				"text": "Czy na pewno?"
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 1, false )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 110, 100 )
+			"size": new java.awt.Dimension( 290, 105 )
+		} )
+	}
+}
