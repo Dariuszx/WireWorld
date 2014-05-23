@@ -4,31 +4,84 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {space :0:483:x}"
-			"$verticalGroup": "par l {space :0:318:x}"
+			"$horizontalGroup": "par l {seq l {space :::p, comp buttonStart:::p:80:p, space :::p, comp buttonPauza:::p::p, space :::p, comp buttonStop:::p:77:p, space u:::p, comp label1:::p:81:p, space :::p, comp label2:::p:50:p, space ::141:x}}"
+			"$verticalGroup": "par l {seq l {space :::p, par b {comp buttonStart::b:p::p, comp buttonPauza::b:p::p, comp buttonStop::b:p::p, comp label1::b:p:30:p, comp label2::b:p::p}, space ::317:x}}"
 		} ) {
 			name: "this"
 			"defaultCloseOperation": 0
 			"title": "WireWorld"
 			"locationByPlatform": true
 			"$locationPolicy": 1
+			"resizable": false
+			"background": new javax.swing.plaf.ColorUIResource( 60, 63, 65 )
+			auxiliary() {
+				"background.forceValue": true
+			}
 			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "thisWindowClosing", true ) )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "buttonStart"
+				"text": "Start"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "buttonPauza"
+				"text": "Pauza"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "buttonStop"
+				"text": "Stop"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Generacja:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "10"
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 0, false )
+			} )
 			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
 				name: "mainMenuBar"
 				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 					name: "menuFile"
-					"text": "File"
+					"text": "Plik"
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemOtworzPlik"
+						"text": "Otwórz plik..."
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemZapiszDoPliku"
+						"text": "Zapisz do pliku..."
+					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemExit"
-						"text": "Exit"
+						"text": "Wyjście"
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemExitActionPerformed", true ) )
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menuOpcje"
+					"text": "Opcje"
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemParametryGeneracji"
+						"text": "Parametry generacji"
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemOkreslZasady"
+						"text": "Określ zasady"
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menuPomoc"
+					"text": "Pomoc"
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItemOProgramie"
+						"text": "O programie"
 					} )
 				} )
 			}
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 495, 365 )
+			"size": new java.awt.Dimension( 540, 400 )
 		} )
 	}
 }
-
