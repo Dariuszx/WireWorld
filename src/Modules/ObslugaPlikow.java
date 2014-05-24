@@ -1,14 +1,26 @@
 package Modules;
 
-public class ObslugaPlikow {
+import java.io.File;
 
-    private String filePath;
+public class ObslugaPlikow  {
 
-    public ObslugaPlikow( String filePath ) {
+    private File plik;
 
-        this.filePath = filePath;
+    public String getFilePath() {
+
+        if( plik == null ) return "";
+        else return plik.getAbsolutePath();
     }
 
-    public ObslugaPlikow() { }
+    public void openFile( String path ) {
 
+        plik = null;
+
+        plik = new File( path );
+    }
+
+    public File getPlik() {
+
+        return plik;
+    }
 }

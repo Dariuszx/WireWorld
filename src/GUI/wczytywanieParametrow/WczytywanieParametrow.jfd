@@ -1,0 +1,46 @@
+JFDML JFormDesigner: "5.2.0.0.109" Java: "1.7.0_55" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {comp labelTitle::l::328:x, seq l {par t {comp buttonZapisz:::p::p, seq {par l {seq {space :p:92:p, comp labelOdstepCzasu:::p::p}, seq t {space :::p, comp labelLiczbaGeneracji:::p::p}}, space :::p, par l {comp inputOdstepCzasu:::p:75:p, comp inputLiczbaGeneracji:::p:75:p}}}, space ::74:x}}"
+			"$verticalGroup": "par l {seq l {comp labelTitle:::p:34:p, space :::p, par b {comp labelLiczbaGeneracji::b:p::p, comp inputLiczbaGeneracji::b:p::p}, space :::p, par b {comp labelOdstepCzasu::b:p::p, comp inputOdstepCzasu::b:p::p}, space :::p, comp buttonZapisz:::p::p, space ::8:x}}"
+		} ) {
+			name: "this"
+			"modal": true
+			"resizable": false
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "labelTitle"
+				"text": "Ustawienia tworzenia generacji."
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 4, false )
+				"horizontalAlignment": 0
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "labelLiczbaGeneracji"
+				"text": "Liczba generacji:"
+				"toolTipText": "Ilość wygenerowanych generacji."
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "labelOdstepCzasu"
+				"text": "Odstęp czasu:"
+				"toolTipText": "Odstęp czasu pomiędzy kolejnymi generacjami."
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "inputLiczbaGeneracji"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "inputOdstepCzasu"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "buttonZapisz"
+				"text": "Zapisz"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonZapiszActionPerformed", true ) )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 340, 160 )
+		} )
+	}
+}
+

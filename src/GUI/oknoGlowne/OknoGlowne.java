@@ -2,23 +2,90 @@
  * Created by JFormDesigner on Thu May 22 20:41:12 CEST 2014
  */
 
-package GUI.mainWindow;
+package GUI.oknoGlowne;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.GroupLayout;
-import javax.swing.plaf.*;
 
+import Data.Parametry;
+import GUI.openFile.OpenFile;
+import GUI.wczytywanieParametrow.WczytywanieParametrow;
 import GUI.yesNoDialog.YesNoDialog;
-import org.jdesktop.beansbinding.*;
-import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
+import Modules.Observable;
+import Modules.Observer;
+import Modules.ObslugaBledow;
 
-public class MainWindow extends JFrame {
 
-    public MainWindow() {
+public class OknoGlowne extends JFrame implements Observable {
 
+    private ArrayList<Observer> obserwatorzy;
+    private Parametry parametry;
+
+    public OknoGlowne( Parametry parametry ) {
+
+        this.parametry = parametry;
         initComponents();
+        obserwatorzy = new ArrayList<Observer>();
+    }
+
+    @Override
+    public void dodajObserwatora( Observer o ) {
+
+        obserwatorzy.add( o );
+    }
+
+    @Override
+    public void usunObserwatora( Observer o ) {
+
+        int index = obserwatorzy.indexOf(o);
+        obserwatorzy.remove(index);
+    }
+
+    @Override
+    public void powiadomObserwatorow() {
+
+        for( Observer o : obserwatorzy ) {
+            try {
+                o.update(parametry);
+            } catch ( ObslugaBledow e ) {
+
+                System.out.println( e.toString() );
+                //TODO dialog wyświetlający błąd
+            }
+        }
+    }
+
+    private void menuItemExitActionPerformed(ActionEvent e) {
+
+        closingOperation();
+    }
+
+    //Akcja Otwórz Plik
+    private void menuItemOtworzPlikActionPerformed(ActionEvent e) {
+
+        OpenFile dialog = new OpenFile();
+
+        int returnVal = dialog.showOpenDialog( this );
+
+        if( returnVal == JFileChooser.APPROVE_OPTION ) {
+
+            parametry.setSciezkaDoPliku(dialog.getSelectedFile().getAbsolutePath());
+
+            powiadomObserwatorow();
+        }
+    }
+
+    //Akcja Parametry Generacji
+    private void menuItemParametryGeneracjiActionPerformed(ActionEvent e) {
+
+        WczytywanieParametrow dialog = new WczytywanieParametrow( this, parametry );
+
+        dialog.setVisible( true );
+
+        powiadomObserwatorow();
     }
 
     private void thisWindowClosing(WindowEvent e) {
@@ -38,11 +105,6 @@ public class MainWindow extends JFrame {
 
         this.setVisible(false);
         this.dispose();
-    }
-
-    private void menuItemExitActionPerformed(ActionEvent e) {
-
-        closingOperation();
     }
 
     private void initComponents() {
@@ -69,7 +131,6 @@ public class MainWindow extends JFrame {
         setTitle("WireWorld");
         setLocationByPlatform(true);
         setResizable(false);
-        setBackground(new Color(60, 63, 65));
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -87,6 +148,12 @@ public class MainWindow extends JFrame {
 
                 //---- menuItemOtworzPlik ----
                 menuItemOtworzPlik.setText("Otw\u00f3rz plik...");
+                menuItemOtworzPlik.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        menuItemOtworzPlikActionPerformed(e);
+                    }
+                });
                 menuFile.add(menuItemOtworzPlik);
 
                 //---- menuItemZapiszDoPliku ----
@@ -111,6 +178,13 @@ public class MainWindow extends JFrame {
 
                 //---- menuItemParametryGeneracji ----
                 menuItemParametryGeneracji.setText("Parametry generacji");
+                menuItemParametryGeneracji.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed( ActionEvent e ) {
+
+                        menuItemParametryGeneracjiActionPerformed(e);
+                    }
+                });
                 menuOpcje.add(menuItemParametryGeneracji);
 
                 //---- menuItemOkreslZasady ----

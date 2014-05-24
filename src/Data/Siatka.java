@@ -2,21 +2,18 @@ package Data;
 
 import Modules.ObslugaBledow;
 
-import java.util.Observable;
-import java.util.Observer;
-
-public class Siatka implements Observer {
+public class Siatka {
 
     private Komorka[][] siatka;
 
     private int liczbaWierszy;
     private int liczbaKolumn;
 
-    public void update( Observable a, Object b ) {
-        System.out.println( "saddas" + liczbaWierszy );
-    }
+    public Siatka( int liczbaKolumn, int liczbaWierszy ) throws ObslugaBledow {
 
-    public Siatka( int liczbaKolumn, int liczbaWierszy ) {
+        if( liczbaKolumn <= 0 || liczbaWierszy <= 0 || liczbaKolumn > 10000 || liczbaWierszy > 10000 ) {
+            throw new ObslugaBledow( "Nieprawidłowy rozmiar siatki" );
+        }
 
         this.liczbaKolumn = liczbaKolumn;
         this.liczbaWierszy = liczbaWierszy;
@@ -57,7 +54,7 @@ public class Siatka implements Observer {
 
     public void setStan( int x, int y, int stan ) throws ObslugaBledow {
 
-        if( x >= liczbaKolumn || y >= liczbaWierszy || x < 0 || y < 0 ) throw new ObslugaBledow( "Współrzędne komórki poza zakresem" );
+        if( x >= liczbaKolumn || y >= liczbaWierszy || x < 0 || y < 0 || stan < 0 || stan > 3 ) throw new ObslugaBledow( "Współrzędne komórki poza zakresem" );
         else {
             siatka[x][y].stan = stan;
         }

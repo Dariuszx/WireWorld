@@ -6,6 +6,7 @@ public class Parametry {
 
     private int iloscGeneracji = 0;
     private int odstepCzasu = 0;
+    private String sciezkaDoPliku = "";
 
     public Parametry( int iloscGeneracji, int odstepCzasu ) {
 
@@ -23,6 +24,8 @@ public class Parametry {
         return odstepCzasu;
     }
 
+    public String getSciezkaDoPliku() { return sciezkaDoPliku; }
+
     public void setIloscGeneracji( int iloscGeneracji ) throws ObslugaBledow {
 
         if( iloscGeneracji <= 0 || iloscGeneracji > 600000 ) throw new ObslugaBledow( "Nieakceptowalna ilość generacji." );
@@ -37,5 +40,9 @@ public class Parametry {
         else {
             this.odstepCzasu = odstepCzasu;
         }
+    }
+
+    public void setSciezkaDoPliku( String sciezka ) {
+        sciezkaDoPliku = sciezka;
     }
 }

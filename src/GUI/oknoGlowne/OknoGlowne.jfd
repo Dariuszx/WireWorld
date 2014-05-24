@@ -13,10 +13,6 @@ new FormModel {
 			"locationByPlatform": true
 			"$locationPolicy": 1
 			"resizable": false
-			"background": new javax.swing.plaf.ColorUIResource( 60, 63, 65 )
-			auxiliary() {
-				"background.forceValue": true
-			}
 			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "thisWindowClosing", true ) )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonStart"
@@ -47,6 +43,7 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemOtworzPlik"
 						"text": "Otwórz plik..."
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemOtworzPlikActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemZapiszDoPliku"
@@ -64,6 +61,7 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemParametryGeneracji"
 						"text": "Parametry generacji"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemParametryGeneracjiActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemOkreslZasady"
