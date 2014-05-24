@@ -1,0 +1,32 @@
+JFDML JFormDesigner: "5.2.0.0.109" Java: "1.7.0_55" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {comp labelTitle::t::553:x, comp labelMessage::t::553:x, seq l {space :p:254:p, comp buttonOk:::p::p, space ::254:x}}"
+			"$verticalGroup": "par l {seq l {space :p:10:p, comp labelTitle:::p::p, space :::p, comp labelMessage:::p:40:p, space :::x, comp buttonOk:::p::p, space :::p}}"
+		} ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "labelMessage"
+				"text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit."
+				"horizontalAlignment": 0
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "labelTitle"
+				"text": "UWAGA!"
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 10, false )
+				"horizontalAlignment": 0
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "buttonOk"
+				"text": "Ok"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonOkActionPerformed", true ) )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 565, 145 )
+		} )
+	}
+}

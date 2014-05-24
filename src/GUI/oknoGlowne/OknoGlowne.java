@@ -14,6 +14,8 @@ import Data.Parametry;
 import GUI.openFile.OpenFile;
 import GUI.wczytywanieParametrow.WczytywanieParametrow;
 import GUI.yesNoDialog.YesNoDialog;
+import GUI.zapiszPlik.ZapiszPlik;
+import GUI.obslugaBledow.ObslugaBledowDialog;
 import Modules.Observable;
 import Modules.Observer;
 import Modules.ObslugaBledow;
@@ -49,11 +51,11 @@ public class OknoGlowne extends JFrame implements Observable {
 
         for( Observer o : obserwatorzy ) {
             try {
+
                 o.update(parametry);
             } catch ( ObslugaBledow e ) {
 
-                System.out.println( e.toString() );
-                //TODO dialog wyświetlający błąd
+                new ObslugaBledowDialog( this, e.toString() ).setVisible( true );
             }
         }
     }
@@ -61,6 +63,27 @@ public class OknoGlowne extends JFrame implements Observable {
     private void menuItemExitActionPerformed(ActionEvent e) {
 
         closingOperation();
+    }
+
+    //Akcja Zapisz Do Pliku
+    private void menuItemZapiszDoPlikuActionPerformed(ActionEvent e) {
+
+        ZapiszPlik dialog = new ZapiszPlik();
+
+        int returnVal = dialog.showSaveDialog( this );
+
+        if( returnVal == JFileChooser.APPROVE_OPTION ) {
+
+            String filePath = dialog.getSelectedFile().getAbsolutePath();
+
+            if( !dialog.getSelectedFile().getAbsolutePath().contains( ".stk" ) ) {
+                filePath += ".stk";
+            }
+
+            parametry.setPlikZapisywanie( filePath );
+
+            powiadomObserwatorow();
+        }
     }
 
     //Akcja Otwórz Plik
@@ -72,7 +95,7 @@ public class OknoGlowne extends JFrame implements Observable {
 
         if( returnVal == JFileChooser.APPROVE_OPTION ) {
 
-            parametry.setSciezkaDoPliku(dialog.getSelectedFile().getAbsolutePath());
+            parametry.setSciezkaDoPliku( dialog.getSelectedFile().getAbsolutePath() );
 
             powiadomObserwatorow();
         }
@@ -158,6 +181,12 @@ public class OknoGlowne extends JFrame implements Observable {
 
                 //---- menuItemZapiszDoPliku ----
                 menuItemZapiszDoPliku.setText("Zapisz do pliku...");
+                menuItemZapiszDoPliku.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        menuItemZapiszDoPlikuActionPerformed(e);
+                    }
+                });
                 menuFile.add(menuItemZapiszDoPliku);
 
                 //---- menuItemExit ----
@@ -180,8 +209,7 @@ public class OknoGlowne extends JFrame implements Observable {
                 menuItemParametryGeneracji.setText("Parametry generacji");
                 menuItemParametryGeneracji.addActionListener(new ActionListener() {
                     @Override
-                    public void actionPerformed( ActionEvent e ) {
-
+                    public void actionPerformed(ActionEvent e) {
                         menuItemParametryGeneracjiActionPerformed(e);
                     }
                 });

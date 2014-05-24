@@ -1,0 +1,14 @@
+JFDML JFormDesigner: "5.2.0.0.109" Java: "1.7.0_55" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormComponent( "javax.swing.JFileChooser" ) {
+			name: "this"
+			"dialogType": 1
+			"dialogTitle": "Zapisz generację."
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+		} )
+	}
+}

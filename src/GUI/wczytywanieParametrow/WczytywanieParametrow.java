@@ -61,6 +61,7 @@ public class WczytywanieParametrow extends JDialog {
         inputLiczbaGeneracji = new JTextField();
         inputOdstepCzasu = new JTextField();
         buttonZapisz = new JButton();
+        label1 = new JLabel();
 
         //======== this ========
         setModal(true);
@@ -89,6 +90,9 @@ public class WczytywanieParametrow extends JDialog {
             }
         });
 
+        //---- label1 ----
+        label1.setText("milisekund");
+
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
@@ -109,7 +113,9 @@ public class WczytywanieParametrow extends JDialog {
                             .addGroup(contentPaneLayout.createParallelGroup()
                                 .addComponent(inputOdstepCzasu, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(inputLiczbaGeneracji, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE))))
-                    .addContainerGap(74, Short.MAX_VALUE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(label1)
+                    .addContainerGap(47, Short.MAX_VALUE))
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
@@ -122,7 +128,8 @@ public class WczytywanieParametrow extends JDialog {
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(labelOdstepCzasu)
-                        .addComponent(inputOdstepCzasu, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(inputOdstepCzasu, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(label1))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(buttonZapisz)
                     .addContainerGap(8, Short.MAX_VALUE))
@@ -140,5 +147,6 @@ public class WczytywanieParametrow extends JDialog {
     private JTextField inputLiczbaGeneracji;
     private JTextField inputOdstepCzasu;
     private JButton buttonZapisz;
+    private JLabel label1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

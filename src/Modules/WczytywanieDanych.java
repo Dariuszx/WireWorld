@@ -4,6 +4,7 @@ import Data.Parametry;
 import Data.Siatka;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class WczytywanieDanych implements Observer {
@@ -25,19 +26,22 @@ public class WczytywanieDanych implements Observer {
 
             System.out.println( "Aktualizacja WczytywanieDanych" );
 
-            //Muszę na nowo otworzyć plik
-            plik.openFile( parametry.getSciezkaDoPliku() );
-
-            siatka = null; //Zeruję siatkę
-
             try {
+                //Muszę na nowo otworzyć plik
+                plik.openFile( parametry.getSciezkaDoPliku() );
+
+                siatka = null; //Zeruję siatkę
 
                 wczytajDane();
 
+                parametry.setWygenerowanaSiatka( siatka );
+
             } catch( NumberFormatException e ) {
                 throw new ObslugaBledow( e.toString() );
-            } catch ( FileNotFoundException e ) {
+            } catch( FileNotFoundException e ) {
                 throw  new ObslugaBledow( e.toString() );
+            } catch( IOException e ) {
+                throw new ObslugaBledow( e.toString() );
             }
 
         }

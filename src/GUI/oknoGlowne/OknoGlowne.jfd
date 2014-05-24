@@ -48,6 +48,7 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemZapiszDoPliku"
 						"text": "Zapisz do pliku..."
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemZapiszDoPlikuActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemExit"

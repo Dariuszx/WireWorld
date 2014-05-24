@@ -4,15 +4,11 @@ import Modules.ObslugaBledow;
 
 public class Parametry {
 
-    private int iloscGeneracji = 0;
-    private int odstepCzasu = 0;
+    private int iloscGeneracji = 10;
+    private int odstepCzasu = 500;
     private String sciezkaDoPliku = "";
-
-    public Parametry( int iloscGeneracji, int odstepCzasu ) {
-
-        this.iloscGeneracji = iloscGeneracji;
-        this.odstepCzasu = odstepCzasu;
-    }
+    private String plikZapisywanie = "";
+    private Siatka wygenerowanaSiatka;
 
     public Parametry() { }
 
@@ -25,6 +21,15 @@ public class Parametry {
     }
 
     public String getSciezkaDoPliku() { return sciezkaDoPliku; }
+
+    public String getPlikZapisywanie() { return plikZapisywanie; }
+
+    public Siatka getWygenerowanaSiatka() { return wygenerowanaSiatka; }
+
+    public void setPlikZapisywanie( String sciezkaDoPliku ) {
+
+        this.plikZapisywanie = sciezkaDoPliku;
+    }
 
     public void setIloscGeneracji( int iloscGeneracji ) throws ObslugaBledow {
 
@@ -45,4 +50,10 @@ public class Parametry {
     public void setSciezkaDoPliku( String sciezka ) {
         sciezkaDoPliku = sciezka;
     }
+
+    public void setWygenerowanaSiatka( Siatka siatka ) {
+
+        this.wygenerowanaSiatka = siatka;
+    }
+
 }

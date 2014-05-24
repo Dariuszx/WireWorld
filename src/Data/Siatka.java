@@ -56,7 +56,7 @@ public class Siatka {
 
         if( x >= liczbaKolumn || y >= liczbaWierszy || x < 0 || y < 0 || stan < 0 || stan > 3 ) throw new ObslugaBledow( "Współrzędne komórki poza zakresem" );
         else {
-            siatka[x][y].stan = stan;
+            siatka[x][y].setStan( stan );
         }
     }
 }
