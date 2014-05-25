@@ -17,11 +17,13 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 
-public class Wizualizacja extends JDialog implements Observable {
+public class Wizualizacja extends JDialog implements Observable, Runnable {
 
     private Parametry parametry;
     private Thread threadRysowanieSiatki;
     private ArrayList<Observer> observerArrayList;
+
+    private volatile boolean stopThread = false;
 
     public Wizualizacja( Frame owner, Parametry parametry ) {
 
@@ -69,10 +71,44 @@ public class Wizualizacja extends JDialog implements Observable {
         }
     }
 
+    @Override
+    public void run() {
+
+        while( !stopThread && parametry.getGeneracjaIndex() < parametry.getIloscGeneracji() ) { //Tutaj rysuję kolejne generacje siatek
+            powiadomObserwatorow();
+            labelGeneracjaIndex.setText( Integer.toString( parametry.getGeneracjaIndex() ) );
+        }
+
+        if( parametry.getGeneracjaIndex() >= parametry.getIloscGeneracji() ) {
+            buttonStart.setEnabled(false);
+            buttonRestart.setEnabled(true);
+            buttonStop.setEnabled(false);
+            buttonPauza.setEnabled(false);
+        }
+
+    }
+
+    private void rozpocznijGenerowanie() {
+
+        while( threadRysowanieSiatki != null && threadRysowanieSiatki.isAlive() ) {
+            stopThread = true;
+        }
+
+        stopThread = false;
+
+        threadRysowanieSiatki = new Thread( this );
+        threadRysowanieSiatki.start();
+    }
+
+    private void zatrzymajGenerowanie() {
+
+        stopThread = true;
+    }
+
     private void buttonStartActionPerformed(ActionEvent e) {
 
-        parametry.setGeneracjaStart( true );
-        parametry.setAutomatKomorkowyZdarzenie( Zdarzenia.WYSTARTOWANO );
+        parametry.setGeneracjaStarted(true);
+        parametry.setAutomatKomorkowyZdarzenie( Zdarzenia.START );
 
         buttonStart.setEnabled( false );
         buttonPauza.setEnabled( true );
@@ -81,26 +117,32 @@ public class Wizualizacja extends JDialog implements Observable {
 
         powiadomObserwatorow();
 
+        rozpocznijGenerowanie();
     }
 
     private void buttonStopActionPerformed(ActionEvent e) {
 
-        parametry.setAutomatKomorkowyZdarzenie( Zdarzenia.STOP );
+        parametry.setAutomatKomorkowyZdarzenie(Zdarzenia.STOP);
 
-        buttonStop.setEnabled( false );
+        buttonStop.setEnabled(false);
         buttonRestart.setEnabled( false );
         buttonPauza.setEnabled( false );
         buttonStart.setEnabled( true );
+
+        powiadomObserwatorow();
+        zatrzymajGenerowanie();
     }
 
     private void buttonPauzaActionPerformed(ActionEvent e) {
 
         parametry.setAutomatKomorkowyZdarzenie( Zdarzenia.PAUZA );
 
-        buttonStart.setEnabled( true );
-        buttonPauza.setEnabled( false );
+        buttonStart.setEnabled(true);
+        buttonPauza.setEnabled(false);
         buttonStop.setEnabled( true );
         buttonRestart.setEnabled( true );
+
+        stopThread = true;
     }
 
     private void buttonRestartActionPerformed(ActionEvent e) {
@@ -112,6 +154,14 @@ public class Wizualizacja extends JDialog implements Observable {
         buttonRestart.setEnabled( true );
         buttonStop.setEnabled( true );
 
+        powiadomObserwatorow();
+
+        rozpocznijGenerowanie();
+    }
+
+    private void thisWindowClosing(WindowEvent e) {
+
+        stopThread = true;
     }
 
     private void initComponents() {
@@ -128,6 +178,12 @@ public class Wizualizacja extends JDialog implements Observable {
 
         //======== this ========
         setModal(true);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                thisWindowClosing(e);
+            }
+        });
         Container contentPane = getContentPane();
 
         //---- buttonStart ----
@@ -182,6 +238,7 @@ public class Wizualizacja extends JDialog implements Observable {
 
         //---- labelGeneracjaIlosc ----
         labelGeneracjaIlosc.setText("10");
+        labelGeneracjaIlosc.setHorizontalAlignment(SwingConstants.LEFT);
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
@@ -199,11 +256,11 @@ public class Wizualizacja extends JDialog implements Observable {
                     .addGap(18, 18, 18)
                     .addComponent(labelGneracja)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(labelGeneracjaIndex, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelGeneracjaIndex, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(labelSlash)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(labelGeneracjaIlosc, GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                    .addComponent(labelGeneracjaIlosc, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
                     .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
@@ -216,9 +273,9 @@ public class Wizualizacja extends JDialog implements Observable {
                         .addComponent(buttonStop)
                         .addComponent(buttonRestart)
                         .addComponent(labelSlash)
-                        .addComponent(labelGeneracjaIlosc)
+                        .addComponent(labelGneracja)
                         .addComponent(labelGeneracjaIndex)
-                        .addComponent(labelGneracja))
+                        .addComponent(labelGeneracjaIlosc))
                     .addContainerGap(288, Short.MAX_VALUE))
         );
         pack();

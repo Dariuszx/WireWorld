@@ -12,7 +12,7 @@ public class Parametry {
     private Siatka siatka;
 
     /* Dane Automatu Komorkowego */
-    private boolean generacjaStart = false;
+    private boolean generacjaStarted = false;
     private int generacjaIndex = 0;
     private Zdarzenia automatKomorkowyZdarzenie = Zdarzenia.NONE;
 
@@ -37,7 +37,7 @@ public class Parametry {
 
     public Siatka getWygenerowanaSiatka() { return wygenerowanaSiatka; }
 
-    public boolean getGeneracjaStart() { return generacjaStart; }
+    public boolean getGeneracjaStarted() { return generacjaStarted; }
 
     public Siatka getSiatka() { return siatka; }
 
@@ -78,8 +78,8 @@ public class Parametry {
         this.wygenerowanaSiatka = siatka;
     }
 
-    public void setGeneracjaStart( boolean value ) {
-        generacjaStart = value;
+    public void setGeneracjaStarted( boolean value ) {
+        generacjaStarted = value;
     }
 
     public void setSiatka( Siatka siatka ) {

@@ -3,5 +3,5 @@ package Data;
 
 public enum Zdarzenia {
 
-    WYSTARTOWANO, PAUZA, STOP, RESTART, NONE
+    START, PAUZA, STOP, RESTART, NONE
 }
