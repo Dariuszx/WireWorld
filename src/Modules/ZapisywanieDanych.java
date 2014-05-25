@@ -21,13 +21,17 @@ public class ZapisywanieDanych implements Observer {
     @Override
     public void update( Parametry parametry ) throws ObslugaBledow {
 
-        if( !plik.getFilePath().equals( parametry.getPlikZapisywanie() ) && parametry.getWygenerowanaSiatka() != null ) {
+
+
+        if( !plik.getFilePath().equals( parametry.getPlikZapisywanie() )  ) {
 
             this.parametry = parametry;
 
             System.out.println( "Aktualizuje moduł zapisywania plików." );
 
             try {
+
+                parametry.setWygenerowanaSiatka( parametry.getSiatka() );
 
                 plik.openFile( parametry.getPlikZapisywanie() );
                 zapiszDoPliku( parametry.getPlikZapisywanie() );

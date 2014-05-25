@@ -13,6 +13,7 @@ import javax.swing.GroupLayout;
 import Data.Parametry;
 import GUI.openFile.OpenFile;
 import GUI.wczytywanieParametrow.WczytywanieParametrow;
+import GUI.wizualizacja.Wizualizacja;
 import GUI.yesNoDialog.YesNoDialog;
 import GUI.zapiszPlik.ZapiszPlik;
 import GUI.obslugaBledow.ObslugaBledowDialog;
@@ -26,11 +27,18 @@ public class OknoGlowne extends JFrame implements Observable {
     private ArrayList<Observer> obserwatorzy;
     private Parametry parametry;
 
+    private Observer automatKomorkowy;
+
     public OknoGlowne( Parametry parametry ) {
 
         this.parametry = parametry;
         initComponents();
         obserwatorzy = new ArrayList<Observer>();
+    }
+
+    public void dodajObserwatorAutomatKomorkowy( Observer automatKomorkowy ) {
+
+        this.automatKomorkowy = automatKomorkowy;
     }
 
     @Override
@@ -91,13 +99,15 @@ public class OknoGlowne extends JFrame implements Observable {
 
         OpenFile dialog = new OpenFile();
 
-        int returnVal = dialog.showOpenDialog( this );
+        int returnVal = dialog.showOpenDialog(this);
 
         if( returnVal == JFileChooser.APPROVE_OPTION ) {
 
             parametry.setSciezkaDoPliku( dialog.getSelectedFile().getAbsolutePath() );
 
             powiadomObserwatorow();
+
+            if( parametry.getSiatka() != null ) buttonStart.setEnabled( true );
         }
     }
 
@@ -109,6 +119,15 @@ public class OknoGlowne extends JFrame implements Observable {
         dialog.setVisible( true );
 
         powiadomObserwatorow();
+    }
+
+    private void buttonStartActionPerformed(ActionEvent e) {
+
+        Wizualizacja dialog = new Wizualizacja( this, parametry );
+
+        dialog.dodajObserwatora( automatKomorkowy );
+
+        dialog.setVisible( true );
     }
 
     private void thisWindowClosing(WindowEvent e) {
@@ -144,10 +163,6 @@ public class OknoGlowne extends JFrame implements Observable {
         menuPomoc = new JMenu();
         menuItemOProgramie = new JMenuItem();
         buttonStart = new JButton();
-        buttonPauza = new JButton();
-        buttonStop = new JButton();
-        label1 = new JLabel();
-        label2 = new JLabel();
 
         //======== this ========
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -181,6 +196,7 @@ public class OknoGlowne extends JFrame implements Observable {
 
                 //---- menuItemZapiszDoPliku ----
                 menuItemZapiszDoPliku.setText("Zapisz do pliku...");
+                menuItemZapiszDoPliku.setEnabled(false);
                 menuItemZapiszDoPliku.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -234,49 +250,30 @@ public class OknoGlowne extends JFrame implements Observable {
         setJMenuBar(mainMenuBar);
 
         //---- buttonStart ----
-        buttonStart.setText("Start");
-
-        //---- buttonPauza ----
-        buttonPauza.setText("Pauza");
-
-        //---- buttonStop ----
-        buttonStop.setText("Stop");
-
-        //---- label1 ----
-        label1.setText("Generacja:");
-
-        //---- label2 ----
-        label2.setText("10");
-        label2.setFont(label2.getFont().deriveFont(label2.getFont().getStyle() | Font.BOLD));
+        buttonStart.setText("Rozpocznij animacj\u0119");
+        buttonStart.setEnabled(false);
+        buttonStart.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                buttonStartActionPerformed(e);
+            }
+        });
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
             contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(buttonStart, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(buttonPauza)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(buttonStop, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(label1, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(label2, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(141, Short.MAX_VALUE))
+                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                    .addContainerGap(160, Short.MAX_VALUE)
+                    .addComponent(buttonStart, GroupLayout.PREFERRED_SIZE, 190, GroupLayout.PREFERRED_SIZE)
+                    .addGap(158, 158, 158))
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(buttonStart)
-                        .addComponent(buttonPauza)
-                        .addComponent(buttonStop)
-                        .addComponent(label1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(label2))
-                    .addContainerGap(317, Short.MAX_VALUE))
+                    .addGap(25, 25, 25)
+                    .addComponent(buttonStart, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(34, Short.MAX_VALUE))
         );
         pack();
         setLocationRelativeTo(null);
@@ -296,9 +293,5 @@ public class OknoGlowne extends JFrame implements Observable {
     private JMenu menuPomoc;
     private JMenuItem menuItemOProgramie;
     private JButton buttonStart;
-    private JButton buttonPauza;
-    private JButton buttonStop;
-    private JLabel label1;
-    private JLabel label2;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

@@ -1,6 +1,7 @@
 import Data.Parametry;
 import Data.Siatka;
 import GUI.oknoGlowne.OknoGlowne;
+import Modules.AutomatKomorkowy;
 import Modules.WczytywanieDanych;
 import Modules.ZapisywanieDanych;
 
@@ -9,20 +10,16 @@ public class Main {
 
     public static void main( String[] args ) {
 
-        Siatka siatka = null;
+        Parametry dane = new Parametry();
 
-        Parametry parametry = new Parametry();
+        OknoGlowne window = new OknoGlowne( dane );
 
-        OknoGlowne window = new OknoGlowne( parametry );
+        window.dodajObserwatora( new WczytywanieDanych() );
 
-        window.dodajObserwatora( new WczytywanieDanych( siatka ) );
+        window.dodajObserwatora( new ZapisywanieDanych() );
 
-        window.dodajObserwatora( new ZapisywanieDanych( ) );
-
+        window.dodajObserwatorAutomatKomorkowy( new AutomatKomorkowy( dane ) );
 
         window.setVisible(true);
-
-
-
     }
 }

@@ -9,8 +9,19 @@ public class Parametry {
     private String sciezkaDoPliku = "";
     private String plikZapisywanie = "";
     private Siatka wygenerowanaSiatka;
+    private Siatka siatka;
 
-    public Parametry() { }
+    /* Dane Automatu Komorkowego */
+    private boolean generacjaStart = false;
+    private int generacjaIndex = 0;
+    private Zdarzenia automatKomorkowyZdarzenie = Zdarzenia.NONE;
+
+
+    public Parametry() {
+
+        this.siatka = new Siatka();
+        this.wygenerowanaSiatka = new Siatka();
+    }
 
     public int getIloscGeneracji() {
         return iloscGeneracji;
@@ -25,6 +36,17 @@ public class Parametry {
     public String getPlikZapisywanie() { return plikZapisywanie; }
 
     public Siatka getWygenerowanaSiatka() { return wygenerowanaSiatka; }
+
+    public boolean getGeneracjaStart() { return generacjaStart; }
+
+    public Siatka getSiatka() { return siatka; }
+
+    public int getGeneracjaIndex() { return generacjaIndex; }
+
+    public Zdarzenia getAutomatKomorkowyZdarzenie() {
+
+        return automatKomorkowyZdarzenie;
+    }
 
     public void setPlikZapisywanie( String sciezkaDoPliku ) {
 
@@ -54,6 +76,25 @@ public class Parametry {
     public void setWygenerowanaSiatka( Siatka siatka ) {
 
         this.wygenerowanaSiatka = siatka;
+    }
+
+    public void setGeneracjaStart( boolean value ) {
+        generacjaStart = value;
+    }
+
+    public void setSiatka( Siatka siatka ) {
+
+        this.siatka = siatka;
+    }
+
+    public void setGeneracjIndex( int index ) {
+
+        this.generacjaIndex = index;
+    }
+
+    public void setAutomatKomorkowyZdarzenie( Zdarzenia e ) {
+
+        this.automatKomorkowyZdarzenie = e;
     }
 
 }

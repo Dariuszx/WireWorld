@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :::p, comp buttonStart:::p:80:p, space :::p, comp buttonPauza:::p::p, space :::p, comp buttonStop:::p:77:p, space u:::p, comp label1:::p:81:p, space :::p, comp label2:::p:50:p, space ::141:x}}"
-			"$verticalGroup": "par l {seq l {space :::p, par b {comp buttonStart::b:p::p, comp buttonPauza::b:p::p, comp buttonStop::b:p::p, comp label1::b:p:30:p, comp label2::b:p::p}, space ::317:x}}"
+			"$horizontalGroup": "par l {seq t {space ::160:x, comp buttonStart:::p:190:p, space :p:158:p}}"
+			"$verticalGroup": "par l {seq l {space :p:25:p, comp buttonStart:::p:44:p, space ::34:x}}"
 		} ) {
 			name: "this"
 			"defaultCloseOperation": 0
@@ -16,24 +16,9 @@ new FormModel {
 			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "thisWindowClosing", true ) )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonStart"
-				"text": "Start"
-			} )
-			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "buttonPauza"
-				"text": "Pauza"
-			} )
-			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "buttonStop"
-				"text": "Stop"
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label1"
-				"text": "Generacja:"
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label2"
-				"text": "10"
-				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 0, false )
+				"text": "Rozpocznij animację"
+				"enabled": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonStartActionPerformed", true ) )
 			} )
 			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
 				name: "mainMenuBar"
@@ -48,6 +33,7 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemZapiszDoPliku"
 						"text": "Zapisz do pliku..."
+						"enabled": false
 						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemZapiszDoPlikuActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
@@ -80,7 +66,7 @@ new FormModel {
 			}
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 540, 400 )
+			"size": new java.awt.Dimension( 520, 150 )
 		} )
 	}
 }

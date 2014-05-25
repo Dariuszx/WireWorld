@@ -24,6 +24,25 @@ public class Siatka {
 
     }
 
+    public Siatka() {
+
+    }
+
+    public void stworzSiatke(int liczbaKolumn, int liczbaWierszy ) throws ObslugaBledow {
+
+        if( liczbaKolumn <= 0 || liczbaWierszy <= 0 || liczbaKolumn > 10000 || liczbaWierszy > 10000 ) {
+            throw new ObslugaBledow( "Nieprawidłowy rozmiar siatki" );
+        }
+
+        this.liczbaKolumn = liczbaKolumn;
+        this.liczbaWierszy = liczbaWierszy;
+
+        siatka = new Komorka[liczbaKolumn][liczbaWierszy];
+
+        initializeSiatka();
+
+    }
+
     private void initializeSiatka() {
 
         int i, j;
@@ -57,6 +76,18 @@ public class Siatka {
         if( x >= liczbaKolumn || y >= liczbaWierszy || x < 0 || y < 0 || stan < 0 || stan > 3 ) throw new ObslugaBledow( "Współrzędne komórki poza zakresem" );
         else {
             siatka[x][y].setStan( stan );
+        }
+    }
+
+    public void kopiujSiatke( Siatka siatka1 ) throws ObslugaBledow {
+
+        siatka1.stworzSiatke( this.liczbaKolumn, this.liczbaWierszy );
+
+        for( int i=0; i < liczbaKolumn; i++ ) {
+
+            for( int j=0; j < liczbaWierszy; j++ ) {
+                siatka1.setStan( i,j, getKomorka(i,j).getStan() );
+            }
         }
     }
 }

@@ -9,12 +9,10 @@ import java.util.Scanner;
 
 public class WczytywanieDanych implements Observer {
 
-    private Siatka siatka;
     private ObslugaPlikow plik;
 
-    public WczytywanieDanych( Siatka siatka ) {
+    public WczytywanieDanych() {
 
-        this.siatka = siatka;
         this.plik = new ObslugaPlikow( );
     }
 
@@ -24,17 +22,14 @@ public class WczytywanieDanych implements Observer {
         //Sprawdzam czy zmieniła się ścieżka do pliku, jeżeli tak to na nowo wczytuję dane
         if ( !parametry.getSciezkaDoPliku().equals( plik.getFilePath() ) ) {
 
-            System.out.println( "Aktualizacja WczytywanieDanych" );
-
             try {
                 //Muszę na nowo otworzyć plik
                 plik.openFile( parametry.getSciezkaDoPliku() );
 
-                siatka = null; //Zeruję siatkę
+                wczytajDane( parametry.getSiatka() );
 
-                wczytajDane();
-
-                parametry.setWygenerowanaSiatka( siatka );
+                //Kopiuję wczytaną siatkę do siatki przechowującą generacje
+                parametry.getSiatka().kopiujSiatke( parametry.getWygenerowanaSiatka() );
 
             } catch( NumberFormatException e ) {
                 throw new ObslugaBledow( e.toString() );
@@ -47,7 +42,7 @@ public class WczytywanieDanych implements Observer {
         }
     }
 
-    private void wczytajDane() throws ObslugaBledow, NumberFormatException, FileNotFoundException {
+    private void wczytajDane( Siatka siatka ) throws ObslugaBledow, NumberFormatException, FileNotFoundException {
 
         Scanner sc;
 
@@ -58,17 +53,18 @@ public class WczytywanieDanych implements Observer {
         while ( sc.hasNextLine() ) {
 
             if( lineIndex == 0 ) { // Pierwszy wiersz pliku to rozmiary siatki
-                wczytajNaglowek(sc.nextLine());
+                wczytajNaglowek( siatka, sc.nextLine());
             } else { //Zaś kolejne wiersze pliku to współrzędne na siatce z odpowiednim stanem np. [10 4 2] czyli wsp. (10,4) stan=2
-                wczytajKomorke( sc.nextLine() );
+                wczytajKomorke( siatka, sc.nextLine() );
             }
             lineIndex++;
         }
 
         sc.close();
+
     }
 
-    private void wczytajNaglowek( String naglowek ) throws ObslugaBledow, NumberFormatException {
+    private void wczytajNaglowek( Siatka siatka, String naglowek ) throws ObslugaBledow, NumberFormatException {
 
         Scanner wiersz = new Scanner( naglowek );
 
@@ -87,14 +83,14 @@ public class WczytywanieDanych implements Observer {
             wordIndex++;
         }
 
-        siatka = new Siatka( x, y );
+        siatka.stworzSiatke( x, y );
 
         System.out.println( "X=" + x + " Y=" + y );
         wiersz.close();
 
     }
 
-    private void wczytajKomorke( String linia ) throws ObslugaBledow, NumberFormatException {
+    private void wczytajKomorke( Siatka siatka, String linia ) throws ObslugaBledow, NumberFormatException {
 
         Scanner wiersz = new Scanner( linia );
 
