@@ -62,6 +62,8 @@ public class WczytywanieDanych implements Observer {
 
         sc.close();
 
+        new WyswietlSiatke( siatka );
+
     }
 
     private void wczytajNaglowek( Siatka siatka, String naglowek ) throws ObslugaBledow, NumberFormatException {
@@ -85,7 +87,6 @@ public class WczytywanieDanych implements Observer {
 
         siatka.stworzSiatke( x, y );
 
-        System.out.println( "X=" + x + " Y=" + y );
         wiersz.close();
 
     }
@@ -108,8 +109,6 @@ public class WczytywanieDanych implements Observer {
         }
 
         siatka.setStan( x, y, stan );
-
-        System.out.println( "x=" + x + " y=" + y + " stan=" + stan );
 
         wiersz.close();
     }

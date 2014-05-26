@@ -31,7 +31,7 @@ public class AutomatKomorkowy implements Observer {
 
                 zarzadzanieCzasem = new ZarzadzanieCzasem( parametry.getOdstepCzasu() );
                 parametry.setGeneracjaStarted( true );
-                parametry.getWygenerowanaSiatka().kopiujSiatke( parametry.getSiatka() );
+                parametry.getSiatka().kopiujSiatke( parametry.getWygenerowanaSiatka() );
                 parametry.setGeneracjIndex( 0 );
 
                 break;
@@ -39,13 +39,10 @@ public class AutomatKomorkowy implements Observer {
             case STOP:
                 parametry.setGeneracjIndex( 0 );
                 parametry.setGeneracjaStarted( false );
-                //TODO
                 break;
 
             case PAUZA:
-
                 parametry.setGeneracjaStarted( false );
-                //TODO
                 break;
 
         }
@@ -60,17 +57,35 @@ public class AutomatKomorkowy implements Observer {
 
                 //Jeżeli czas upłynał to tworzę nową generację
                 stworzGeneracje();
+                System.out.println( "TWORZĘ GENERACJĘ NR " + parametry.getGeneracjaIndex() );
                 zarzadzanieCzasem.setCzasOstatniejGeneracji(); //ustawiam czas wygenerowania generacji
             }
         }
     }
 
-    private void stworzGeneracje() {
+    private void stworzGeneracje() throws ObslugaBledow {
 
         parametry.setGeneracjIndex( parametry.getGeneracjaIndex() + 1 ); //zwiększam index o 1
 
         System.out.println( "Upłynęło " + parametry.getOdstepCzasu() + " milisekund. Tworzę generację nr " + parametry.getGeneracjaIndex() );
-        //TODO tworzenie generacji
+
+        Siatka tmp = new Siatka(); //Siatka tymczasowa
+        parametry.getWygenerowanaSiatka().kopiujSiatke( tmp ); //Kopiuję siatkę aktualnej generacji do zmiennej tymczasowej
+
+        Zasady zasady = new Zasady( tmp );
+
+        for( int i=0; i < tmp.getLiczbaKolumn(); i++ ) {
+
+            for( int j=0; j < tmp.getLiczbaWierszy(); j++ ) {
+
+                zasady.zmienStan( i, j, tmp.getKomorka( i, j ) );
+            }
+        }
+
+        //Już po generacji, kopiuję siatkę tmp do Siatki wygenerowanaSiatka
+        tmp.kopiujSiatke( parametry.getWygenerowanaSiatka() );
+
+        new WyswietlSiatke( parametry.getWygenerowanaSiatka() );
 
     }
 }

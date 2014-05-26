@@ -11,6 +11,7 @@ import GUI.obslugaBledow.ObslugaBledowDialog;
 import Modules.Observable;
 import Modules.Observer;
 import Modules.ObslugaBledow;
+import Modules.WyswietlSiatke;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -37,6 +38,8 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
         labelGeneracjaIlosc.setText( Integer.toString( parametry.getIloscGeneracji() ) );
 
         if( parametry.getSiatka() != null ) buttonStart.setEnabled( true );
+
+        new WyswietlSiatke( parametry.getSiatka() );
     }
 
     public Wizualizacja(Dialog owner) {
