@@ -85,7 +85,7 @@ public class AutomatKomorkowy implements Observer {
         //Już po generacji, kopiuję siatkę tmp do Siatki wygenerowanaSiatka
         tmp.kopiujSiatke( parametry.getWygenerowanaSiatka() );
 
-        new WyswietlSiatke( parametry.getWygenerowanaSiatka() );
+        //new WyswietlSiatke( parametry.getWygenerowanaSiatka() );
 
     }
 }

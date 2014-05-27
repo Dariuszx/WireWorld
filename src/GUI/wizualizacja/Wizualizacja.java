@@ -5,7 +5,9 @@
 package GUI.wizualizacja;
 
 import java.awt.event.*;
+import javax.swing.border.*;
 import Data.Parametry;
+import Data.Siatka;
 import Data.Zdarzenia;
 import GUI.obslugaBledow.ObslugaBledowDialog;
 import Modules.Observable;
@@ -34,12 +36,12 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
 
         initComponents();
 
+        setSize( new Dimension( 640, 485 ) );
+
         labelGeneracjaIndex.setText( Integer.toString( parametry.getGeneracjaIndex() ) );
         labelGeneracjaIlosc.setText( Integer.toString( parametry.getIloscGeneracji() ) );
 
         if( parametry.getSiatka() != null ) buttonStart.setEnabled( true );
-
-        new WyswietlSiatke( parametry.getSiatka() );
     }
 
     public Wizualizacja(Dialog owner) {
@@ -77,9 +79,21 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
     @Override
     public void run() {
 
+        int numerGneracji =  parametry.getGeneracjaIndex();
+
         while( !stopThread && parametry.getGeneracjaIndex() < parametry.getIloscGeneracji() ) { //Tutaj rysuję kolejne generacje siatek
             powiadomObserwatorow();
             labelGeneracjaIndex.setText( Integer.toString( parametry.getGeneracjaIndex() ) );
+
+            if( numerGneracji != parametry.getGeneracjaIndex() ) {
+                numerGneracji = parametry.getGeneracjaIndex();
+
+                RysowanieSiatki rysowanie = new RysowanieSiatki( parametry.getWygenerowanaSiatka() );
+
+                panelCanvas.add( rysowanie );
+
+                rysowanie.setBounds( 0, 0, 800, 800 );
+            }
         }
 
         if( parametry.getGeneracjaIndex() >= parametry.getIloscGeneracji() ) {
@@ -88,6 +102,13 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
             buttonStop.setEnabled(false);
             buttonPauza.setEnabled(false);
         }
+
+    }
+
+    private void rysuj() {
+
+
+
 
     }
 
@@ -178,6 +199,8 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
         labelGeneracjaIndex = new JLabel();
         labelSlash = new JLabel();
         labelGeneracjaIlosc = new JLabel();
+        panelCanvas = new JPanel();
+        panel1 = new JPanel();
 
         //======== this ========
         setModal(true);
@@ -243,28 +266,81 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
         labelGeneracjaIlosc.setText("10");
         labelGeneracjaIlosc.setHorizontalAlignment(SwingConstants.LEFT);
 
+        //======== panelCanvas ========
+        {
+
+            // JFormDesigner evaluation mark
+            panelCanvas.setBorder(new javax.swing.border.CompoundBorder(
+                new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
+                    "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
+                    javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
+                    java.awt.Color.red), panelCanvas.getBorder())); panelCanvas.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
+
+            panelCanvas.setLayout(null);
+
+            //======== panel1 ========
+            {
+                panel1.setLayout(null);
+
+                { // compute preferred size
+                    Dimension preferredSize = new Dimension();
+                    for(int i = 0; i < panel1.getComponentCount(); i++) {
+                        Rectangle bounds = panel1.getComponent(i).getBounds();
+                        preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                        preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                    }
+                    Insets insets = panel1.getInsets();
+                    preferredSize.width += insets.right;
+                    preferredSize.height += insets.bottom;
+                    panel1.setMinimumSize(preferredSize);
+                    panel1.setPreferredSize(preferredSize);
+                }
+            }
+            panelCanvas.add(panel1);
+            panel1.setBounds(500, 0, panel1.getPreferredSize().width, 275);
+
+            { // compute preferred size
+                Dimension preferredSize = new Dimension();
+                for(int i = 0; i < panelCanvas.getComponentCount(); i++) {
+                    Rectangle bounds = panelCanvas.getComponent(i).getBounds();
+                    preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                    preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                }
+                Insets insets = panelCanvas.getInsets();
+                preferredSize.width += insets.right;
+                preferredSize.height += insets.bottom;
+                panelCanvas.setMinimumSize(preferredSize);
+                panelCanvas.setPreferredSize(preferredSize);
+            }
+        }
+
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(buttonStart)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(buttonPauza)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(buttonStop)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(buttonRestart)
-                    .addGap(18, 18, 18)
-                    .addComponent(labelGneracja)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(labelGeneracjaIndex, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(labelSlash)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(labelGeneracjaIlosc, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap())
+                    .addGroup(contentPaneLayout.createParallelGroup()
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addComponent(panelCanvas, GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
+                            .addContainerGap())
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addComponent(buttonStart)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(buttonPauza)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(buttonStop)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(buttonRestart)
+                            .addGap(18, 18, 18)
+                            .addComponent(labelGneracja)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(labelGeneracjaIndex, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(labelSlash)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(labelGeneracjaIlosc, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+                            .addGap(0, 90, Short.MAX_VALUE))))
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
@@ -279,10 +355,11 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
                         .addComponent(labelGneracja)
                         .addComponent(labelGeneracjaIndex)
                         .addComponent(labelGeneracjaIlosc))
-                    .addContainerGap(288, Short.MAX_VALUE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(panelCanvas, GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE))
         );
-        pack();
-        setLocationRelativeTo(getOwner());
+        setSize(640, 480);
+        setLocationRelativeTo(null);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
@@ -296,5 +373,7 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
     private JLabel labelGeneracjaIndex;
     private JLabel labelSlash;
     private JLabel labelGeneracjaIlosc;
+    private JPanel panelCanvas;
+    private JPanel panel1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

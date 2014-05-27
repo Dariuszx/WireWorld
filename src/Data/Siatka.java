@@ -30,8 +30,8 @@ public class Siatka {
 
     public void stworzSiatke(int liczbaKolumn, int liczbaWierszy ) throws ObslugaBledow {
 
-        if( liczbaKolumn <= 0 || liczbaWierszy <= 0 || liczbaKolumn > 10000 || liczbaWierszy > 10000 ) {
-            throw new ObslugaBledow( "Nieprawidłowy rozmiar siatki" );
+        if( liczbaKolumn <= 0 || liczbaWierszy <= 0 || liczbaKolumn > 600 || liczbaWierszy > 400 ) {
+            throw new ObslugaBledow( "Nieprawidłwy rozmiar siatki." );
         }
 
         this.liczbaKolumn = liczbaKolumn;
