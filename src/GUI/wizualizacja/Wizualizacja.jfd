@@ -5,7 +5,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
 			"$horizontalGroup": "par l {seq l {space :::p, par l {seq {comp panelCanvas::::616:x, space :::p}, seq {comp buttonStart:::p::p, space :::p, comp buttonPauza:::p::p, space :::p, comp buttonStop:::p::p, space :::p, comp buttonRestart:::p::p, space s:::p, comp labelGneracja:::p::p, space :::p, comp labelGeneracjaIndex:::p:30:p, space :::p, comp labelSlash:::p::p, space :::p, comp labelGeneracjaIlosc:::p:50:p, space :0:90:x}}}}"
-			"$verticalGroup": "par l {seq l {space :::p, par b {comp buttonStart::b:p::p, comp buttonPauza::b:p::p, comp buttonStop::b:p::p, comp buttonRestart::b:p::p, comp labelSlash::b:p::p, comp labelGneracja::b:p::p, comp labelGeneracjaIndex::b:p::p, comp labelGeneracjaIlosc::b:p::p}, space :::p, comp panelCanvas::::412:x}}"
+			"$verticalGroup": "par l {seq l {space :::p, par b {comp buttonStart::b:p::p, comp buttonPauza::b:p::p, comp buttonStop::b:p::p, comp buttonRestart::b:p::p, comp labelSlash::b:p::p, comp labelGneracja::b:p::p, comp labelGeneracjaIndex::b:p::p, comp labelGeneracjaIlosc::b:p::p}, space :::p, comp panelCanvas:::p:420:p, space ::7:x}}"
 		} ) {
 			name: "this"
 			"$sizePolicy": 1
@@ -65,7 +65,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 640, 480 )
+			"size": new java.awt.Dimension( 640, 495 )
 		} )
 	}
 }

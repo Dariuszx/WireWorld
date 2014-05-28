@@ -25,6 +25,8 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
     private Parametry parametry;
     private Thread threadRysowanieSiatki;
     private ArrayList<Observer> observerArrayList;
+    private RysowanieSiatki rysowanie;
+
 
     private volatile boolean stopThread = false;
 
@@ -36,12 +38,21 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
 
         initComponents();
 
-        setSize( new Dimension( 640, 485 ) );
+        setSize( new Dimension( 640, 500 ) );
 
         labelGeneracjaIndex.setText( Integer.toString( parametry.getGeneracjaIndex() ) );
         labelGeneracjaIlosc.setText( Integer.toString( parametry.getIloscGeneracji() ) );
 
-        if( parametry.getSiatka() != null ) buttonStart.setEnabled( true );
+        rysowanie = new RysowanieSiatki();
+
+
+        rysowanie.setSiatka( parametry.getWygenerowanaSiatka() );
+        panelCanvas.add( rysowanie );
+        rysowanie.setBounds( 0, 0, 800, 800 );
+
+        if( parametry.getSiatka() != null ) {
+            buttonStart.setEnabled( true );
+        }
     }
 
     public Wizualizacja(Dialog owner) {
@@ -88,7 +99,7 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
             if( numerGneracji != parametry.getGeneracjaIndex() ) {
                 numerGneracji = parametry.getGeneracjaIndex();
 
-                RysowanieSiatki rysowanie = new RysowanieSiatki( parametry.getWygenerowanaSiatka() );
+                rysowanie.setSiatka( parametry.getWygenerowanaSiatka() );
 
                 panelCanvas.add( rysowanie );
 
@@ -102,13 +113,6 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
             buttonStop.setEnabled(false);
             buttonPauza.setEnabled(false);
         }
-
-    }
-
-    private void rysuj() {
-
-
-
 
     }
 
@@ -347,18 +351,19 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
                 .addGroup(contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(buttonStart)
-                        .addComponent(buttonPauza)
-                        .addComponent(buttonStop)
-                        .addComponent(buttonRestart)
-                        .addComponent(labelSlash)
-                        .addComponent(labelGneracja)
-                        .addComponent(labelGeneracjaIndex)
-                        .addComponent(labelGeneracjaIlosc))
+                            .addComponent(buttonStart)
+                            .addComponent(buttonPauza)
+                            .addComponent(buttonStop)
+                            .addComponent(buttonRestart)
+                            .addComponent(labelSlash)
+                            .addComponent(labelGneracja)
+                            .addComponent(labelGeneracjaIndex)
+                            .addComponent(labelGeneracjaIlosc))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(panelCanvas, GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE))
+                    .addComponent(panelCanvas, GroupLayout.PREFERRED_SIZE, 420, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(7, Short.MAX_VALUE))
         );
-        setSize(640, 480);
+        setSize(640, 495);
         setLocationRelativeTo(null);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }

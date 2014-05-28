@@ -12,10 +12,12 @@ public class RysowanieSiatki extends Canvas {
     private Siatka siatka;
     private int kwadratWymiary;
 
-    public RysowanieSiatki( Siatka siatka ) {
+    public RysowanieSiatki() {
 
+    }
+
+    public void setSiatka( Siatka siatka ) {
         this.siatka = siatka;
-        obliczPreferowanaSzerokoscKwadratu();
     }
 
     private void obliczPreferowanaSzerokoscKwadratu() {
@@ -28,6 +30,11 @@ public class RysowanieSiatki extends Canvas {
     }
 
     public void paint(Graphics g) {
+
+        super.paint( g );
+        g.clearRect( 0, 0, 800, 800 );
+
+        obliczPreferowanaSzerokoscKwadratu();
 
         int centerX = ( 610 - ( siatka.getLiczbaKolumn() * kwadratWymiary ) ) / 2;
         int centerY = ( 410 - ( siatka.getLiczbaWierszy() * kwadratWymiary ) ) / 2;
@@ -56,7 +63,7 @@ public class RysowanieSiatki extends Canvas {
                             break;
                     }
 
-                    g.fillRect(centerX + i*kwadratWymiary, centerY + j*kwadratWymiary, kwadratWymiary, kwadratWymiary );
+                    g.fillRect(centerX + i*kwadratWymiary + i, centerY + j*kwadratWymiary + j, kwadratWymiary, kwadratWymiary );
 
                 } catch( ObslugaBledow e ) {
                     System.out.println( e.toString() );

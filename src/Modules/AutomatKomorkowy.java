@@ -57,7 +57,7 @@ public class AutomatKomorkowy implements Observer {
 
                 //Jeżeli czas upłynał to tworzę nową generację
                 stworzGeneracje();
-                System.out.println( "TWORZĘ GENERACJĘ NR " + parametry.getGeneracjaIndex() );
+                //System.out.println( "TWORZĘ GENERACJĘ NR " + parametry.getGeneracjaIndex() );
                 zarzadzanieCzasem.setCzasOstatniejGeneracji(); //ustawiam czas wygenerowania generacji
             }
         }
@@ -67,7 +67,7 @@ public class AutomatKomorkowy implements Observer {
 
         parametry.setGeneracjIndex( parametry.getGeneracjaIndex() + 1 ); //zwiększam index o 1
 
-        System.out.println( "Upłynęło " + parametry.getOdstepCzasu() + " milisekund. Tworzę generację nr " + parametry.getGeneracjaIndex() );
+        //System.out.println( "Upłynęło " + parametry.getOdstepCzasu() + " milisekund. Tworzę generację nr " + parametry.getGeneracjaIndex() );
 
         Siatka tmp = new Siatka(); //Siatka tymczasowa
         parametry.getWygenerowanaSiatka().kopiujSiatke( tmp ); //Kopiuję siatkę aktualnej generacji do zmiennej tymczasowej
