@@ -26,6 +26,7 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
     private Thread threadRysowanieSiatki;
     private ArrayList<Observer> observerArrayList;
     private RysowanieSiatki rysowanie;
+    private Ustawienia ustawieniaGraficzne;
 
 
     private volatile boolean stopThread = false;
@@ -38,17 +39,12 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
 
         initComponents();
 
-        setSize( new Dimension( 640, 500 ) );
+        this.ustawieniaGraficzne = new Ustawienia( parametry.getWygenerowanaSiatka(), new Dimension( 709, 452 ) );
 
-        labelGeneracjaIndex.setText( Integer.toString( parametry.getGeneracjaIndex() ) );
-        labelGeneracjaIlosc.setText( Integer.toString( parametry.getIloscGeneracji() ) );
-
-        rysowanie = new RysowanieSiatki();
+        rysowanie = new RysowanieSiatki( ustawieniaGraficzne );
 
 
-        rysowanie.setSiatka( parametry.getWygenerowanaSiatka() );
-        panelCanvas.add( rysowanie );
-        rysowanie.setBounds( 0, 0, 800, 800 );
+        rysuj( parametry.getSiatka() );
 
         if( parametry.getSiatka() != null ) {
             buttonStart.setEnabled( true );
@@ -94,26 +90,36 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
 
         while( !stopThread && parametry.getGeneracjaIndex() < parametry.getIloscGeneracji() ) { //Tutaj rysuję kolejne generacje siatek
             powiadomObserwatorow();
-            labelGeneracjaIndex.setText( Integer.toString( parametry.getGeneracjaIndex() ) );
+            //labelGeneracjaIndex.setText( Integer.toString( parametry.getGeneracjaIndex() ) );
 
             if( numerGneracji != parametry.getGeneracjaIndex() ) {
                 numerGneracji = parametry.getGeneracjaIndex();
 
-                rysowanie.setSiatka( parametry.getWygenerowanaSiatka() );
+                rysuj( parametry.getWygenerowanaSiatka() );
 
-                panelCanvas.add( rysowanie );
-
-                rysowanie.setBounds( 0, 0, 800, 800 );
+                labelGeneracjaIndex.setText( Integer.toString( parametry.getGeneracjaIndex() ) );
             }
         }
 
         if( parametry.getGeneracjaIndex() >= parametry.getIloscGeneracji() ) {
-            buttonStart.setEnabled(false);
-            buttonRestart.setEnabled(true);
+
+            buttonStart.setEnabled(true);
             buttonStop.setEnabled(false);
             buttonPauza.setEnabled(false);
+
+            parametry.setWygenerowanaSiatka( parametry.getSiatka() );
+            parametry.setGeneracjIndex( 0 );
         }
 
+    }
+
+    private void rysuj( Siatka siatka ) {
+
+        rysowanie.setSiatka( siatka );
+
+        panelCanvas.add( rysowanie );
+
+        rysowanie.setBounds( 0, 0, 800, 800 );
     }
 
     private void rozpocznijGenerowanie() {
@@ -131,6 +137,8 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
     private void zatrzymajGenerowanie() {
 
         stopThread = true;
+
+        parametry.setWygenerowanaSiatka( parametry.getSiatka() );
     }
 
     private void buttonStartActionPerformed(ActionEvent e) {
@@ -140,10 +148,11 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
 
         buttonStart.setEnabled( false );
         buttonPauza.setEnabled( true );
-        buttonRestart.setEnabled( true );
         buttonStop.setEnabled( true );
 
         powiadomObserwatorow();
+
+        rysuj( parametry.getSiatka() );
 
         rozpocznijGenerowanie();
     }
@@ -153,7 +162,6 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
         parametry.setAutomatKomorkowyZdarzenie(Zdarzenia.STOP);
 
         buttonStop.setEnabled(false);
-        buttonRestart.setEnabled( false );
         buttonPauza.setEnabled( false );
         buttonStart.setEnabled( true );
 
@@ -168,23 +176,8 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
         buttonStart.setEnabled(true);
         buttonPauza.setEnabled(false);
         buttonStop.setEnabled( true );
-        buttonRestart.setEnabled( true );
 
         stopThread = true;
-    }
-
-    private void buttonRestartActionPerformed(ActionEvent e) {
-
-        parametry.setAutomatKomorkowyZdarzenie( Zdarzenia.RESTART );
-
-        buttonStart.setEnabled( false );
-        buttonPauza.setEnabled( true );
-        buttonRestart.setEnabled( true );
-        buttonStop.setEnabled( true );
-
-        powiadomObserwatorow();
-
-        rozpocznijGenerowanie();
     }
 
     private void thisWindowClosing(WindowEvent e) {
@@ -195,14 +188,13 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - Dariusz Dybka
+        panelNarzedzia = new JPanel();
         buttonStart = new JButton();
         buttonPauza = new JButton();
         buttonStop = new JButton();
-        buttonRestart = new JButton();
-        labelGneracja = new JLabel();
+        label1 = new JLabel();
         labelGeneracjaIndex = new JLabel();
-        labelSlash = new JLabel();
-        labelGeneracjaIlosc = new JLabel();
+        panelSiatka = new JPanel();
         panelCanvas = new JPanel();
         panel1 = new JPanel();
 
@@ -216,106 +208,147 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
         });
         Container contentPane = getContentPane();
 
-        //---- buttonStart ----
-        buttonStart.setText("Start");
-        buttonStart.setEnabled(false);
-        buttonStart.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buttonStartActionPerformed(e);
-            }
-        });
-
-        //---- buttonPauza ----
-        buttonPauza.setText("Pauza");
-        buttonPauza.setEnabled(false);
-        buttonPauza.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buttonPauzaActionPerformed(e);
-            }
-        });
-
-        //---- buttonStop ----
-        buttonStop.setText("Stop");
-        buttonStop.setEnabled(false);
-        buttonStop.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buttonStopActionPerformed(e);
-            }
-        });
-
-        //---- buttonRestart ----
-        buttonRestart.setText("Rozpocznij od nowa");
-        buttonRestart.setEnabled(false);
-        buttonRestart.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buttonRestartActionPerformed(e);
-            }
-        });
-
-        //---- labelGneracja ----
-        labelGneracja.setText("Generacja nr:");
-
-        //---- labelGeneracjaIndex ----
-        labelGeneracjaIndex.setText("5");
-        labelGeneracjaIndex.setHorizontalAlignment(SwingConstants.RIGHT);
-
-        //---- labelSlash ----
-        labelSlash.setText("/");
-
-        //---- labelGeneracjaIlosc ----
-        labelGeneracjaIlosc.setText("10");
-        labelGeneracjaIlosc.setHorizontalAlignment(SwingConstants.LEFT);
-
-        //======== panelCanvas ========
+        //======== panelNarzedzia ========
         {
+            panelNarzedzia.setBorder(new TitledBorder("Przybornik"));
 
             // JFormDesigner evaluation mark
-            panelCanvas.setBorder(new javax.swing.border.CompoundBorder(
+            panelNarzedzia.setBorder(new javax.swing.border.CompoundBorder(
                 new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
                     "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
                     javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
-                    java.awt.Color.red), panelCanvas.getBorder())); panelCanvas.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
+                    java.awt.Color.red), panelNarzedzia.getBorder())); panelNarzedzia.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
 
-            panelCanvas.setLayout(null);
 
-            //======== panel1 ========
+            //---- buttonStart ----
+            buttonStart.setText("Start");
+            buttonStart.setEnabled(false);
+            buttonStart.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    buttonStartActionPerformed(e);
+                }
+            });
+
+            //---- buttonPauza ----
+            buttonPauza.setText("Pauza");
+            buttonPauza.setEnabled(false);
+            buttonPauza.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    buttonPauzaActionPerformed(e);
+                }
+            });
+
+            //---- buttonStop ----
+            buttonStop.setText("Stop");
+            buttonStop.setEnabled(false);
+            buttonStop.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    buttonStopActionPerformed(e);
+                }
+            });
+
+            //---- label1 ----
+            label1.setText("Licznik generacji:");
+            label1.setHorizontalAlignment(SwingConstants.RIGHT);
+
+            //---- labelGeneracjaIndex ----
+            labelGeneracjaIndex.setText("0");
+
+            GroupLayout panelNarzedziaLayout = new GroupLayout(panelNarzedzia);
+            panelNarzedzia.setLayout(panelNarzedziaLayout);
+            panelNarzedziaLayout.setHorizontalGroup(
+                panelNarzedziaLayout.createParallelGroup()
+                    .addGroup(panelNarzedziaLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(buttonStart, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buttonStop, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buttonPauza, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(label1, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelGeneracjaIndex, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(277, Short.MAX_VALUE))
+            );
+            panelNarzedziaLayout.setVerticalGroup(
+                panelNarzedziaLayout.createParallelGroup()
+                    .addGroup(GroupLayout.Alignment.TRAILING, panelNarzedziaLayout.createSequentialGroup()
+                        .addGroup(panelNarzedziaLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(buttonStart)
+                            .addComponent(buttonStop)
+                            .addComponent(buttonPauza)
+                            .addComponent(labelGeneracjaIndex)
+                            .addComponent(label1))
+                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            );
+        }
+
+        //======== panelSiatka ========
+        {
+            panelSiatka.setBorder(new TitledBorder("Siatka wygenerowana"));
+
+            //======== panelCanvas ========
             {
-                panel1.setLayout(null);
+                panelCanvas.setBorder(null);
+                panelCanvas.setPreferredSize(new Dimension(663, 436));
+                panelCanvas.setMinimumSize(new Dimension(663, 436));
+                panelCanvas.setLayout(null);
+
+                //======== panel1 ========
+                {
+                    panel1.setLayout(null);
+
+                    { // compute preferred size
+                        Dimension preferredSize = new Dimension();
+                        for(int i = 0; i < panel1.getComponentCount(); i++) {
+                            Rectangle bounds = panel1.getComponent(i).getBounds();
+                            preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                            preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+                        }
+                        Insets insets = panel1.getInsets();
+                        preferredSize.width += insets.right;
+                        preferredSize.height += insets.bottom;
+                        panel1.setMinimumSize(preferredSize);
+                        panel1.setPreferredSize(preferredSize);
+                    }
+                }
+                panelCanvas.add(panel1);
+                panel1.setBounds(500, 0, panel1.getPreferredSize().width, 275);
 
                 { // compute preferred size
                     Dimension preferredSize = new Dimension();
-                    for(int i = 0; i < panel1.getComponentCount(); i++) {
-                        Rectangle bounds = panel1.getComponent(i).getBounds();
+                    for(int i = 0; i < panelCanvas.getComponentCount(); i++) {
+                        Rectangle bounds = panelCanvas.getComponent(i).getBounds();
                         preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
                         preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
                     }
-                    Insets insets = panel1.getInsets();
+                    Insets insets = panelCanvas.getInsets();
                     preferredSize.width += insets.right;
                     preferredSize.height += insets.bottom;
-                    panel1.setMinimumSize(preferredSize);
-                    panel1.setPreferredSize(preferredSize);
+                    panelCanvas.setMinimumSize(preferredSize);
+                    panelCanvas.setPreferredSize(preferredSize);
                 }
             }
-            panelCanvas.add(panel1);
-            panel1.setBounds(500, 0, panel1.getPreferredSize().width, 275);
 
-            { // compute preferred size
-                Dimension preferredSize = new Dimension();
-                for(int i = 0; i < panelCanvas.getComponentCount(); i++) {
-                    Rectangle bounds = panelCanvas.getComponent(i).getBounds();
-                    preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-                    preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-                }
-                Insets insets = panelCanvas.getInsets();
-                preferredSize.width += insets.right;
-                preferredSize.height += insets.bottom;
-                panelCanvas.setMinimumSize(preferredSize);
-                panelCanvas.setPreferredSize(preferredSize);
-            }
+            GroupLayout panelSiatkaLayout = new GroupLayout(panelSiatka);
+            panelSiatka.setLayout(panelSiatkaLayout);
+            panelSiatkaLayout.setHorizontalGroup(
+                panelSiatkaLayout.createParallelGroup()
+                    .addGroup(panelSiatkaLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(panelCanvas, GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
+                        .addContainerGap())
+            );
+            panelSiatkaLayout.setVerticalGroup(
+                panelSiatkaLayout.createParallelGroup()
+                    .addGroup(panelSiatkaLayout.createSequentialGroup()
+                        .addComponent(panelCanvas, GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
+                        .addContainerGap())
+            );
         }
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
@@ -325,59 +358,33 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
                 .addGroup(contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(contentPaneLayout.createParallelGroup()
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addComponent(panelCanvas, GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
-                            .addContainerGap())
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addComponent(buttonStart)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(buttonPauza)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(buttonStop)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(buttonRestart)
-                            .addGap(18, 18, 18)
-                            .addComponent(labelGneracja)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(labelGeneracjaIndex, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(labelSlash)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(labelGeneracjaIlosc, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
-                            .addGap(0, 90, Short.MAX_VALUE))))
+                        .addComponent(panelNarzedzia, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(panelSiatka, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(buttonStart)
-                            .addComponent(buttonPauza)
-                            .addComponent(buttonStop)
-                            .addComponent(buttonRestart)
-                            .addComponent(labelSlash)
-                            .addComponent(labelGneracja)
-                            .addComponent(labelGeneracjaIndex)
-                            .addComponent(labelGeneracjaIlosc))
+                    .addComponent(panelNarzedzia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(panelCanvas, GroupLayout.PREFERRED_SIZE, 420, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(7, Short.MAX_VALUE))
+                    .addComponent(panelSiatka, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap())
         );
-        setSize(640, 495);
+        setSize(755, 580);
         setLocationRelativeTo(null);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner Evaluation license - Dariusz Dybka
+    private JPanel panelNarzedzia;
     private JButton buttonStart;
     private JButton buttonPauza;
     private JButton buttonStop;
-    private JButton buttonRestart;
-    private JLabel labelGneracja;
+    private JLabel label1;
     private JLabel labelGeneracjaIndex;
-    private JLabel labelSlash;
-    private JLabel labelGeneracjaIlosc;
+    private JPanel panelSiatka;
     private JPanel panelCanvas;
     private JPanel panel1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables

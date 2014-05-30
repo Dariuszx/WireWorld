@@ -107,7 +107,16 @@ public class OknoGlowne extends JFrame implements Observable {
 
             powiadomObserwatorow();
 
-            if( parametry.getSiatka() != null ) buttonStart.setEnabled( true );
+            if( parametry.getSiatka() != null ) {
+                buttonStart.setEnabled( true );
+                try {
+                    parametry.getSiatka().kopiujSiatke(parametry.getWygenerowanaSiatka());
+                    menuItemZapiszDoPliku.setEnabled( true );
+                } catch ( ObslugaBledow error ) {
+                    new ObslugaBledowDialog( this, error.toString() ).setVisible( true );
+                }
+
+            }
         }
     }
 

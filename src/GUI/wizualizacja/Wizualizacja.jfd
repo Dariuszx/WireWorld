@@ -4,68 +4,70 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :::p, par l {seq {comp panelCanvas::::616:x, space :::p}, seq {comp buttonStart:::p::p, space :::p, comp buttonPauza:::p::p, space :::p, comp buttonStop:::p::p, space :::p, comp buttonRestart:::p::p, space s:::p, comp labelGneracja:::p::p, space :::p, comp labelGeneracjaIndex:::p:30:p, space :::p, comp labelSlash:::p::p, space :::p, comp labelGeneracjaIlosc:::p:50:p, space :0:90:x}}}}"
-			"$verticalGroup": "par l {seq l {space :::p, par b {comp buttonStart::b:p::p, comp buttonPauza::b:p::p, comp buttonStop::b:p::p, comp buttonRestart::b:p::p, comp labelSlash::b:p::p, comp labelGneracja::b:p::p, comp labelGeneracjaIndex::b:p::p, comp labelGeneracjaIlosc::b:p::p}, space :::p, comp panelCanvas:::p:420:p, space ::7:x}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp panelNarzedzia:::::x, comp panelSiatka:::::x}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp panelNarzedzia:::p::p, space :::p, comp panelSiatka:::::x, space :::p}}"
 		} ) {
 			name: "this"
 			"$sizePolicy": 1
 			"modal": true
 			"$locationPolicy": 1
 			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "thisWindowClosing", true ) )
-			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "buttonStart"
-				"text": "Start"
-				"enabled": false
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonStartActionPerformed", true ) )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq {space :::p, comp buttonStart:::p:71:p, space :::p, comp buttonStop:::p:71:p, space :::p, comp buttonPauza:::p:71:p, space s:::p, comp label1:::p:121:p, space :::p, comp labelGeneracjaIndex:::p:68:p, space ::277:x}}"
+				"$verticalGroup": "par l {seq t {par b {comp buttonStart::b:p::p, comp buttonStop::b:p::p, comp buttonPauza::b:p::p, comp labelGeneracjaIndex::b:p::p, comp label1::b:p::p}, space :::x}}"
+			} ) {
+				name: "panelNarzedzia"
+				"border": new javax.swing.border.TitledBorder( "Przybornik" )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonStart"
+					"text": "Start"
+					"enabled": false
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonStartActionPerformed", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonPauza"
+					"text": "Pauza"
+					"enabled": false
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPauzaActionPerformed", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonStop"
+					"text": "Stop"
+					"enabled": false
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonStopActionPerformed", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label1"
+					"text": "Licznik generacji:"
+					"horizontalAlignment": 4
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "labelGeneracjaIndex"
+					"text": "0"
+				} )
 			} )
-			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "buttonPauza"
-				"text": "Pauza"
-				"enabled": false
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPauzaActionPerformed", true ) )
-			} )
-			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "buttonStop"
-				"text": "Stop"
-				"enabled": false
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonStopActionPerformed", true ) )
-			} )
-			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "buttonRestart"
-				"text": "Rozpocznij od nowa"
-				"enabled": false
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonRestartActionPerformed", true ) )
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "labelGneracja"
-				"text": "Generacja nr:"
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "labelGeneracjaIndex"
-				"text": "5"
-				"horizontalAlignment": 4
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "labelSlash"
-				"text": "/"
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "labelGeneracjaIlosc"
-				"text": "10"
-				"horizontalAlignment": 2
-			} )
-			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
-				name: "panelCanvas"
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq l {space :::p, comp panelCanvas::::709:x, space :::p}}"
+				"$verticalGroup": "par l {seq l {comp panelCanvas::::452:x, space :::p}}"
+			} ) {
+				name: "panelSiatka"
+				"border": new javax.swing.border.TitledBorder( "Siatka wygenerowana" )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
-					name: "panel1"
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-					"x": 500
-					"height": 275
+					name: "panelCanvas"
+					"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+					"preferredSize": new java.awt.Dimension( 663, 436 )
+					"minimumSize": new java.awt.Dimension( 663, 436 )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+						name: "panel1"
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+						"x": 500
+						"height": 275
+					} )
 				} )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 640, 495 )
+			"size": new java.awt.Dimension( 755, 580 )
 		} )
 	}
 }

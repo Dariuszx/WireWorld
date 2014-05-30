@@ -70,22 +70,24 @@ public class AutomatKomorkowy implements Observer {
         //System.out.println( "Upłynęło " + parametry.getOdstepCzasu() + " milisekund. Tworzę generację nr " + parametry.getGeneracjaIndex() );
 
         Siatka tmp = new Siatka(); //Siatka tymczasowa
+
         parametry.getWygenerowanaSiatka().kopiujSiatke( tmp ); //Kopiuję siatkę aktualnej generacji do zmiennej tymczasowej
 
-        Zasady zasady = new Zasady( tmp );
+        Zasady zasady = new Zasady( parametry.getWygenerowanaSiatka() );
 
         for( int i=0; i < tmp.getLiczbaKolumn(); i++ ) {
 
             for( int j=0; j < tmp.getLiczbaWierszy(); j++ ) {
 
-                zasady.zmienStan( i, j, tmp.getKomorka( i, j ) );
+                if( tmp.getKomorka( i, j ).getStan() != 0 )
+                    zasady.zmienStan( i, j, tmp.getKomorka( i, j ) );
             }
         }
 
         //Już po generacji, kopiuję siatkę tmp do Siatki wygenerowanaSiatka
         tmp.kopiujSiatke( parametry.getWygenerowanaSiatka() );
 
-        //new WyswietlSiatke( parametry.getWygenerowanaSiatka() );
+        new WyswietlSiatke( parametry.getWygenerowanaSiatka() );
 
     }
 }

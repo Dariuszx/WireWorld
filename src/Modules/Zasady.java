@@ -45,7 +45,7 @@ public class Zasady {
         return false;
     }
 
-    private boolean czyPrzewodnik() throws ObslugaBledow{
+    private boolean czyPrzewodnik() throws ObslugaBledow {
 
         if( zadana.getStan() != 3 ) return false;
 
@@ -60,7 +60,6 @@ public class Zasady {
                 if( x+x1 >= 0 && y+y1 >= 0 && x+x1 < siatka.getLiczbaKolumn() && y+y1 < siatka.getLiczbaWierszy() && ( x1 != 0 || y1 != 0 ) ) {
 
                     if( siatka.getKomorka( x+x1, y+y1 ).getStan() == 1 ) {
-                        System.out.println( x + " " + y );
                         count++;
                     }
                 }

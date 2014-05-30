@@ -10,34 +10,18 @@ import java.awt.*;
 public class RysowanieSiatki extends Canvas {
 
     private Siatka siatka;
-    private int kwadratWymiary;
+    private Ustawienia ustawienia;
 
-    public RysowanieSiatki() {
+    public RysowanieSiatki( Ustawienia ustawienia ) {
 
+        this.ustawienia = ustawienia;
     }
 
     public void setSiatka( Siatka siatka ) {
         this.siatka = siatka;
     }
 
-    private void obliczPreferowanaSzerokoscKwadratu() {
-
-        if( siatka.getLiczbaKolumn() > siatka.getLiczbaWierszy() ) {
-            kwadratWymiary = 616 / siatka.getLiczbaKolumn();
-        } else {
-            kwadratWymiary = 406 / siatka.getLiczbaWierszy();
-        }
-    }
-
-    public void paint(Graphics g) {
-
-        super.paint( g );
-        g.clearRect( 0, 0, 800, 800 );
-
-        obliczPreferowanaSzerokoscKwadratu();
-
-        int centerX = ( 610 - ( siatka.getLiczbaKolumn() * kwadratWymiary ) ) / 2;
-        int centerY = ( 410 - ( siatka.getLiczbaWierszy() * kwadratWymiary ) ) / 2;
+    public void paint( Graphics g ) {
 
         for( int i=0; i < siatka.getLiczbaKolumn(); i++ ) {
 
@@ -63,7 +47,9 @@ public class RysowanieSiatki extends Canvas {
                             break;
                     }
 
-                    g.fillRect(centerX + i*kwadratWymiary + i, centerY + j*kwadratWymiary + j, kwadratWymiary, kwadratWymiary );
+                    g.fillRect( ustawienia.topLeftCorner.x + i*ustawienia.szerokoscKwadratu + i,
+                                    ustawienia.topLeftCorner.y + j*ustawienia.szerokoscKwadratu + j,
+                                        ustawienia.szerokoscKwadratu, ustawienia.szerokoscKwadratu );
 
                 } catch( ObslugaBledow e ) {
                     System.out.println( e.toString() );
@@ -71,8 +57,9 @@ public class RysowanieSiatki extends Canvas {
             }
         }
     }
-
+/*
     public void update( Graphics g ) {
         paint( g );
     }
+    */
 }
