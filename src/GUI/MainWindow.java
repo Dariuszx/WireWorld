@@ -13,12 +13,12 @@ import javax.swing.GroupLayout;
 import Data.Events;
 import Data.Parameters;
 import GUI.editMesh.EditMesh;
+import GUI.errorHandling.ErrorHandlingDialog;
 import GUI.openFile.OpenFile;
 import GUI.parametersLoading.ParametersLoading;
 import GUI.saveFile.SaveFile;
 import GUI.visualisation.Visualisation;
 import GUI.yesNoDialog.YesNoDialog;
-import GUI.obslugaBledow.ObslugaBledowDialog;
 import Modules.ErrorHandling;
 import Modules.Observable;
 import Modules.Observer;
@@ -76,7 +76,7 @@ public class MainWindow extends JFrame implements Observable, Observer {
                 o.update(parameters);
             } catch ( ErrorHandling e ) {
 
-                new ObslugaBledowDialog( this, e.toString() ).setVisible( true );
+                new ErrorHandlingDialog( this, e.toString() ).setVisible( true );
             }
         }
     }
@@ -152,7 +152,7 @@ public class MainWindow extends JFrame implements Observable, Observer {
                 }
                 catch ( ErrorHandling error )
                 {
-                    new ObslugaBledowDialog( this, error.toString() ).setVisible( true );
+                    new ErrorHandlingDialog( this, error.toString() ).setVisible( true );
                 }
 
             }

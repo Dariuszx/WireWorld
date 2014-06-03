@@ -4,18 +4,38 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq t {space :::p, comp panelSiatka:::p::p, space :::p, par l {comp panelPrzybornik:::::x, comp panelNarzedzia:::::x}, space :::p}}"
+			"$horizontalGroup": "par l {seq t {space :::p, comp panelSiatka:::::x, space :::p, par l {comp panelNarzedzia:::::x, seq t {space :0:0:x, comp panelPrzybornik:::p::p}}, space :::p}}"
 			"$verticalGroup": "par l {seq l {space :::p, par l {comp panelSiatka:::::x, seq {comp panelPrzybornik:::p::p, space :::p, comp panelNarzedzia:::::x}}, space :::p}}"
 		} ) {
 			name: "this"
 			"title": "Edytuj siatkę"
 			"modal": true
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-				"$horizontalGroup": "par l {space :0:172:x}"
-				"$verticalGroup": "par l {space :0:182:x}"
+				"$horizontalGroup": "par l {seq {space :::p, par l {comp buttonGlowa::l::134:x, comp buttonPrzewodnik::t::134:x, comp buttonOgon::l::134:x, comp buttonPusta::l::134:x, comp buttonDiode::l::134:x}, space :::p}}"
+				"$verticalGroup": "par l {seq t {comp buttonGlowa:::p::p, space :::p, comp buttonPrzewodnik:::p::p, space :::p, comp buttonOgon:::p::p, space :::p, comp buttonPusta:::p::p, space :::x, comp buttonDiode:::p::p, space :::p}}"
 			} ) {
 				name: "panelPrzybornik"
 				"border": new javax.swing.border.TitledBorder( "Przybornik" )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonDiode"
+					"text": "Diode"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonGlowa"
+					"text": "Głowa"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonOgon"
+					"text": "Ogon"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonPrzewodnik"
+					"text": "Przewodnik"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonPusta"
+					"text": "Pusta"
+				} )
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
 				"$horizontalGroup": "par l {seq l {space :::p, comp panelCanvas:::::x, space :::p}}"
@@ -24,18 +44,34 @@ new FormModel {
 				name: "panelSiatka"
 				"border": new javax.swing.border.TitledBorder( "Siatka" )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-					"$horizontalGroup": "par l {space :0:476:x}"
-					"$verticalGroup": "par l {space :0:405:x}"
+					"$horizontalGroup": "par l {space :0:502:x}"
+					"$verticalGroup": "par l {space :0:0:x}"
 				} ) {
 					name: "panelCanvas"
 				} )
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-				"$horizontalGroup": "par l {space :0:172:x}"
-				"$verticalGroup": "par l {space :0:202:x}"
+				"$horizontalGroup": "par l {seq {space :::p, par l {seq {par l {comp buttonWyczysc::l:p:134:p, comp buttonResetuj::l:p:134:p}, space :0:0:x}, seq t {space :0:0:x, par l:::p {comp buttonZapisz::::91:x, comp buttonWyjdz::::91:x}}}, space :::p}}"
+				"$verticalGroup": "par l {seq l {comp buttonWyczysc:::p::p, space :::p, comp buttonResetuj:::p::p, space :p:66:p, comp buttonZapisz:::p::p, space :::p, comp buttonWyjdz:::p::p, space :::x}}"
 			} ) {
 				name: "panelNarzedzia"
 				"border": new javax.swing.border.TitledBorder( "Narzędzia" )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonWyczysc"
+					"text": "Wyczyść"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonResetuj"
+					"text": "Resetuj"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonZapisz"
+					"text": "Zapisz"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonWyjdz"
+					"text": "Wyjdź"
+				} )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 5, 0 )

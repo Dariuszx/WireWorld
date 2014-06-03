@@ -73,7 +73,11 @@ public class Parameters {
         generacjaStarted = value;
     }
 
-    public void setMesh( Mesh mesh ) { this.mesh = mesh; }
+    public void setMesh( Mesh mesh ) throws ErrorHandling {
+
+        this.mesh = mesh;
+        this.mesh.copyMesh(getGeneratedMesh());
+    }
 
     public void setGeneracjIndex( int index ) { this.indexOfGenerations = index; }
 

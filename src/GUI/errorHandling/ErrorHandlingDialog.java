@@ -2,23 +2,23 @@
  * Created by JFormDesigner on Sat May 24 20:48:38 CEST 2014
  */
 
-package GUI.obslugaBledow;
+package GUI.errorHandling;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 
-public class ObslugaBledowDialog extends JDialog {
+public class ErrorHandlingDialog extends JDialog {
 
-    public ObslugaBledowDialog( Frame owner, String title ) {
+    public ErrorHandlingDialog( Frame owner, String title ) {
         super(owner);
         initComponents();
 
         labelMessage.setText( title );
     }
 
-    public ObslugaBledowDialog( Dialog owner, String title ) {
+    public ErrorHandlingDialog( Dialog owner, String title ) {
 
         super(owner);
         initComponents();

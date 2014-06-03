@@ -10,11 +10,10 @@ import javax.swing.border.*;
 import Data.Events;
 import Data.Parameters;
 import Data.Mesh;
-import GUI.obslugaBledow.ObslugaBledowDialog;
+import GUI.errorHandling.ErrorHandlingDialog;
 import Modules.ErrorHandling;
 import Modules.Observable;
 import Modules.Observer;
-import Modules.WyswietlSiatke;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ public class Visualisation extends JDialog implements Observable, Runnable {
     private Parameters parameters;
     private Thread threadRysowanieSiatki;
     private ArrayList<Observer> observerArrayList;
-    private MeshDrawing rysowanie;
+    private MeshDrawing drawing;
 
 
     private volatile boolean stopThread = false;
@@ -39,11 +38,9 @@ public class Visualisation extends JDialog implements Observable, Runnable {
 
         initComponents();
 
-        new WyswietlSiatke( parameters.getMesh() );
+        drawing = new MeshDrawing();
 
-        rysowanie = new MeshDrawing();
-
-        rysuj( parameters.getMesh() );
+        draw(parameters.getMesh());
 
         if( parameters.getMesh() != null ) {
             buttonStart.setEnabled( true );
@@ -78,7 +75,7 @@ public class Visualisation extends JDialog implements Observable, Runnable {
 
         } catch( ErrorHandling e ) {
 
-            new ObslugaBledowDialog( this, e.toString() ).setVisible( true );
+            new ErrorHandlingDialog( this, e.toString() ).setVisible( true );
         }
     }
 
@@ -94,7 +91,7 @@ public class Visualisation extends JDialog implements Observable, Runnable {
             if( numerGneracji != parameters.getIndexOfGenerations() ) {
                 numerGneracji = parameters.getIndexOfGenerations();
 
-                rysuj( parameters.getGeneratedMesh() );
+                draw(parameters.getGeneratedMesh());
 
                 labelGeneracjaIndex.setText( Integer.toString( parameters.getIndexOfGenerations() ) );
             }
@@ -112,16 +109,16 @@ public class Visualisation extends JDialog implements Observable, Runnable {
 
     }
 
-    private void rysuj( Mesh mesh ) {
+    private void draw( Mesh mesh ) {
 
-        rysowanie.setMesh(mesh);
+        drawing.setMesh(mesh);
 
-        panelCanvas.add( rysowanie );
+        panelCanvas.add(drawing);
 
-        rysowanie.setBounds( 0, 0, 800, 800 );
+        drawing.setBounds(0, 0, 800, 800);
     }
 
-    private void rozpocznijGenerowanie() {
+    private void startGeneration() {
 
         while( threadRysowanieSiatki != null && threadRysowanieSiatki.isAlive() ) {
             stopThread = true;
@@ -133,7 +130,7 @@ public class Visualisation extends JDialog implements Observable, Runnable {
         threadRysowanieSiatki.start();
     }
 
-    private void zatrzymajGenerowanie() {
+    private void stopGeneration() {
 
         stopThread = true;
 
@@ -151,9 +148,9 @@ public class Visualisation extends JDialog implements Observable, Runnable {
 
         notifyObservers();
 
-        rysuj( parameters.getMesh() );
+        draw(parameters.getMesh());
 
-        rozpocznijGenerowanie();
+        startGeneration();
     }
 
     private void buttonStopActionPerformed(ActionEvent e) {
@@ -165,7 +162,7 @@ public class Visualisation extends JDialog implements Observable, Runnable {
         buttonStart.setEnabled( true );
 
         notifyObservers();
-        zatrzymajGenerowanie();
+        stopGeneration();
     }
 
     private void buttonPauzaActionPerformed(ActionEvent e) {
