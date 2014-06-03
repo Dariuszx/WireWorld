@@ -1,15 +1,14 @@
 package GUI.wizualizacja;
 
 
-import Data.Siatka;
-import Modules.ObslugaBledow;
-import Modules.WyswietlSiatke;
+import Data.Mesh;
+import Modules.ErrorHandling;
 
 import java.awt.*;
 
 public class RysowanieSiatki extends Canvas {
 
-    private Siatka siatka;
+    private Mesh mesh;
     private Ustawienia ustawienia;
 
     public RysowanieSiatki( Ustawienia ustawienia ) {
@@ -17,18 +16,18 @@ public class RysowanieSiatki extends Canvas {
         this.ustawienia = ustawienia;
     }
 
-    public void setSiatka( Siatka siatka ) {
-        this.siatka = siatka;
+    public void setMesh( Mesh mesh ) {
+        this.mesh = mesh;
     }
 
     public void paint( Graphics g ) {
 
-        for( int i=0; i < siatka.getLiczbaKolumn(); i++ ) {
+        for( int i=0; i < mesh.getNumberOfColumns(); i++ ) {
 
-            for( int j=0; j < siatka.getLiczbaWierszy(); j++ ) {
+            for( int j=0; j < mesh.getNumberOfRows(); j++ ) {
 
                 try {
-                    switch( siatka.getKomorka( i, j ).getStan() ) {
+                    switch( mesh.getCell(i, j).getStan() ) {
 
                         case 0:
                             g.setColor(Color.black);
@@ -51,7 +50,7 @@ public class RysowanieSiatki extends Canvas {
                                     ustawienia.topLeftCorner.y + j*ustawienia.szerokoscKwadratu + j,
                                         ustawienia.szerokoscKwadratu, ustawienia.szerokoscKwadratu );
 
-                } catch( ObslugaBledow e ) {
+                } catch( ErrorHandling e ) {
                     System.out.println( e.toString() );
                 }
             }

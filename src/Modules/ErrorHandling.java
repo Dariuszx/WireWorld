@@ -1,10 +1,10 @@
 package Modules;
 
-public class ObslugaBledow extends Exception {
+public class ErrorHandling extends Exception {
 
     private String message;
 
-    public ObslugaBledow( String message ) {
+    public ErrorHandling( String message ) {
         this.message = message;
     }
 

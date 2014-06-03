@@ -1,8 +1,7 @@
-import Data.Parametry;
-import Data.Siatka;
+import Data.Parameters;
 import GUI.oknoGlowne.OknoGlowne;
 import Modules.AutomatKomorkowy;
-import Modules.WczytywanieDanych;
+import Modules.DataLoading;
 import Modules.ZapisywanieDanych;
 
 
@@ -10,11 +9,11 @@ public class Main {
 
     public static void main( String[] args ) {
 
-        Parametry dane = new Parametry();
+        Parameters dane = new Parameters();
 
         OknoGlowne window = new OknoGlowne( dane );
 
-        window.dodajObserwatora( new WczytywanieDanych() );
+        window.dodajObserwatora( new DataLoading() );
 
         window.dodajObserwatora( new ZapisywanieDanych() );
 

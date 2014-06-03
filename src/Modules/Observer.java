@@ -1,8 +1,8 @@
 package Modules;
 
-import Data.Parametry;
+import Data.Parameters;
 
 public interface Observer {
 
-    public void update( Parametry parametry ) throws ObslugaBledow;
+    public void update( Parameters parameters ) throws ErrorHandling;
 }

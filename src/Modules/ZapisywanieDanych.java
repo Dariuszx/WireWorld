@@ -1,8 +1,7 @@
 package Modules;
 
-import Data.Komorka;
-import Data.Parametry;
-import Data.Siatka;
+import Data.Cell;
+import Data.Parameters;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,53 +9,53 @@ import java.io.PrintWriter;
 
 public class ZapisywanieDanych implements Observer {
 
-    private ObslugaPlikow plik;
-    private Parametry parametry;
+    private FileHandling plik;
+    private Parameters parameters;
 
     public ZapisywanieDanych() {
 
-        this.plik = new ObslugaPlikow();
+        this.plik = new FileHandling();
     }
 
     @Override
-    public void update( Parametry parametry ) throws ObslugaBledow {
+    public void update( Parameters parameters ) throws ErrorHandling {
 
 
 
-        if( !plik.getFilePath().equals( parametry.getPlikZapisywanie() )  ) {
+        if( !plik.getFilePath().equals( parameters.getPathToOutputFileMesh() )  ) {
 
-            this.parametry = parametry;
+            this.parameters = parameters;
 
             System.out.println( "Aktualizuje moduł zapisywania plików." );
 
             try {
 
-                parametry.setWygenerowanaSiatka( parametry.getSiatka() );
+                parameters.setGeneratedMesh(parameters.getMesh());
 
-                plik.openFile( parametry.getPlikZapisywanie() );
-                zapiszDoPliku( parametry.getPlikZapisywanie() );
+                plik.openFile( parameters.getPathToOutputFileMesh() );
+                zapiszDoPliku( parameters.getPathToOutputFileMesh() );
 
             } catch( IOException e ) {
-                throw new ObslugaBledow( e.getMessage() );
+                throw new ErrorHandling( e.getMessage() );
             }
         }
 
     }
 
-    private void zapiszDoPliku( String sciezkaDoPliku ) throws FileNotFoundException, ObslugaBledow {
+    private void zapiszDoPliku( String sciezkaDoPliku ) throws FileNotFoundException, ErrorHandling {
 
-        Komorka komorka;
+        Cell cell;
         PrintWriter zapis = new PrintWriter( sciezkaDoPliku );
 
-        zapis.println( parametry.getWygenerowanaSiatka().getLiczbaKolumn() + " " + parametry.getWygenerowanaSiatka().getLiczbaWierszy() );
+        zapis.println( parameters.getGeneratedMesh().getNumberOfColumns() + " " + parameters.getGeneratedMesh().getNumberOfRows() );
 
-        for( int i=0; i < parametry.getWygenerowanaSiatka().getLiczbaKolumn(); i++ ) {
+        for( int i=0; i < parameters.getGeneratedMesh().getNumberOfColumns(); i++ ) {
 
-            for( int j=0; j < parametry.getWygenerowanaSiatka().getLiczbaWierszy(); j++ ) {
+            for( int j=0; j < parameters.getGeneratedMesh().getNumberOfRows(); j++ ) {
 
-                komorka = parametry.getWygenerowanaSiatka().getKomorka( i, j );
-                if( komorka.getStan() != 0 )
-                    zapis.println( i + " " + j + " " + komorka.getStan() );
+                cell = parameters.getGeneratedMesh().getCell(i, j);
+                if( cell.getStan() != 0 )
+                    zapis.println( i + " " + j + " " + cell.getStan() );
             }
         }
 

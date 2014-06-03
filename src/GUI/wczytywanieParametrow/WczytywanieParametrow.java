@@ -5,8 +5,8 @@
 package GUI.wczytywanieParametrow;
 
 import java.awt.event.*;
-import Data.Parametry;
-import Modules.ObslugaBledow;
+import Data.Parameters;
+import Modules.ErrorHandling;
 
 import java.awt.*;
 import javax.swing.*;
@@ -14,16 +14,16 @@ import javax.swing.GroupLayout;
 
 public class WczytywanieParametrow extends JDialog {
 
-    private Parametry parametry;
+    private Parameters parameters;
 
-    public WczytywanieParametrow(Frame owner, Parametry parametry) {
+    public WczytywanieParametrow(Frame owner, Parameters parameters ) {
 
         super(owner);
-        this.parametry = parametry;
+        this.parameters = parameters;
         initComponents();
 
-        inputLiczbaGeneracji.setText( Integer.toString( parametry.getIloscGeneracji() ) );
-        inputOdstepCzasu.setText( Integer.toString( parametry.getOdstepCzasu() ) );
+        inputLiczbaGeneracji.setText( Integer.toString( parameters.getNumberOfGenerations() ) );
+        inputOdstepCzasu.setText( Integer.toString( parameters.getInterval() ) );
     }
 
     public WczytywanieParametrow(Dialog owner) {
@@ -35,12 +35,12 @@ public class WczytywanieParametrow extends JDialog {
 
         try {
 
-            parametry.setIloscGeneracji( Integer.parseInt( inputLiczbaGeneracji.getText() ) );
-            parametry.setOdstepCzasu( Integer.parseInt( inputOdstepCzasu.getText() ) );
+            parameters.setNumberOfGenerations(Integer.parseInt(inputLiczbaGeneracji.getText()));
+            parameters.setInterval(Integer.parseInt(inputOdstepCzasu.getText()));
 
             this.dispose();
 
-        } catch ( ObslugaBledow error ) {
+        } catch ( ErrorHandling error ) {
 
             //TODO wyświetlić komunikat
         } catch ( NumberFormatException error ) {

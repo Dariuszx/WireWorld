@@ -1,21 +1,21 @@
 package Modules;
 
-import Data.Komorka;
-import Data.Siatka;
+import Data.Cell;
+import Data.Mesh;
 
 public class Zasady {
 
-    private Komorka zadana;
-    private Siatka siatka;
+    private Cell zadana;
+    private Mesh mesh;
     private int wspolrzedneKomorkiX;
     private int wsplrzedneKomorkiY;
 
-    public Zasady( Siatka siatka ) {
+    public Zasady( Mesh mesh ) {
 
-        this.siatka = siatka;
+        this.mesh = mesh;
     }
 
-    public void zmienStan( int x, int y, Komorka zadana ) throws ObslugaBledow {
+    public void zmienStan( int x, int y, Cell zadana ) throws ErrorHandling {
 
         this.zadana = zadana;
         this.wspolrzedneKomorkiX = x;
@@ -45,7 +45,7 @@ public class Zasady {
         return false;
     }
 
-    private boolean czyPrzewodnik() throws ObslugaBledow {
+    private boolean czyPrzewodnik() throws ErrorHandling {
 
         if( zadana.getStan() != 3 ) return false;
 
@@ -57,9 +57,9 @@ public class Zasady {
         for( int x1 = -1; x1 <= 1; x1++ ) {
             for( int y1 = -1; y1 <= 1; y1++ ) {
 
-                if( x+x1 >= 0 && y+y1 >= 0 && x+x1 < siatka.getLiczbaKolumn() && y+y1 < siatka.getLiczbaWierszy() && ( x1 != 0 || y1 != 0 ) ) {
+                if( x+x1 >= 0 && y+y1 >= 0 && x+x1 < mesh.getNumberOfColumns() && y+y1 < mesh.getNumberOfRows() && ( x1 != 0 || y1 != 0 ) ) {
 
-                    if( siatka.getKomorka( x+x1, y+y1 ).getStan() == 1 ) {
+                    if( mesh.getCell(x + x1, y + y1).getStan() == 1 ) {
                         count++;
                     }
                 }

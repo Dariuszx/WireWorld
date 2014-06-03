@@ -1,7 +1,7 @@
 package Data;
 
 
-public enum Zdarzenia {
+public enum Events {
 
     START, PAUZA, STOP, RESTART, NONE
 }

@@ -1,22 +1,22 @@
 package Modules;
 
 
-import Data.Siatka;
+import Data.Mesh;
 
 public class WyswietlSiatke {
 
-    public WyswietlSiatke( Siatka siatka ) {
+    public WyswietlSiatke( Mesh mesh ) {
 
         try {
-            System.out.println("Liczba kolumn = " + siatka.getLiczbaKolumn() + " Liczba wierszy = " + siatka.getLiczbaWierszy());
+            System.out.println("Liczba kolumn = " + mesh.getNumberOfColumns() + " Liczba wierszy = " + mesh.getNumberOfRows());
 
-            for ( int i = 0; i < siatka.getLiczbaKolumn(); i++ ) {
-                for ( int j = 0; j < siatka.getLiczbaWierszy(); j++ ) {
-                    System.out.print(siatka.getKomorka(i, j).getStan() + " ");
+            for ( int i = 0; i < mesh.getNumberOfColumns(); i++ ) {
+                for ( int j = 0; j < mesh.getNumberOfRows(); j++ ) {
+                    System.out.print(mesh.getCell(i, j).getStan() + " ");
                 }
                 System.out.println();
             }
-        } catch ( ObslugaBledow e ) {
+        } catch ( ErrorHandling e ) {
 
         }
     }

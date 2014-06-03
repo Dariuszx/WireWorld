@@ -10,28 +10,28 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 
-import Data.Parametry;
+import Data.Parameters;
 import GUI.openFile.OpenFile;
 import GUI.wczytywanieParametrow.WczytywanieParametrow;
 import GUI.wizualizacja.Wizualizacja;
 import GUI.yesNoDialog.YesNoDialog;
 import GUI.zapiszPlik.ZapiszPlik;
 import GUI.obslugaBledow.ObslugaBledowDialog;
+import Modules.ErrorHandling;
 import Modules.Observable;
 import Modules.Observer;
-import Modules.ObslugaBledow;
 
 
 public class OknoGlowne extends JFrame implements Observable {
 
     private ArrayList<Observer> obserwatorzy;
-    private Parametry parametry;
+    private Parameters parameters;
 
     private Observer automatKomorkowy;
 
-    public OknoGlowne( Parametry parametry ) {
+    public OknoGlowne( Parameters parameters ) {
 
-        this.parametry = parametry;
+        this.parameters = parameters;
         initComponents();
         obserwatorzy = new ArrayList<Observer>();
     }
@@ -60,8 +60,8 @@ public class OknoGlowne extends JFrame implements Observable {
         for( Observer o : obserwatorzy ) {
             try {
 
-                o.update(parametry);
-            } catch ( ObslugaBledow e ) {
+                o.update(parameters);
+            } catch ( ErrorHandling e ) {
 
                 new ObslugaBledowDialog( this, e.toString() ).setVisible( true );
             }
@@ -88,7 +88,7 @@ public class OknoGlowne extends JFrame implements Observable {
                 filePath += ".stk";
             }
 
-            parametry.setPlikZapisywanie( filePath );
+            parameters.setPathToOutputFileMesh(filePath);
 
             powiadomObserwatorow();
         }
@@ -103,16 +103,16 @@ public class OknoGlowne extends JFrame implements Observable {
 
         if( returnVal == JFileChooser.APPROVE_OPTION ) {
 
-            parametry.setSciezkaDoPliku( dialog.getSelectedFile().getAbsolutePath() );
+            parameters.setPathToSourceFileMesh(dialog.getSelectedFile().getAbsolutePath());
 
             powiadomObserwatorow();
 
-            if( parametry.getSiatka() != null ) {
+            if( parameters.getMesh() != null ) {
                 buttonStart.setEnabled( true );
                 try {
-                    parametry.getSiatka().kopiujSiatke(parametry.getWygenerowanaSiatka());
+                    parameters.getMesh().copyMesh(parameters.getGeneratedMesh());
                     menuItemZapiszDoPliku.setEnabled( true );
-                } catch ( ObslugaBledow error ) {
+                } catch ( ErrorHandling error ) {
                     new ObslugaBledowDialog( this, error.toString() ).setVisible( true );
                 }
 
@@ -120,10 +120,10 @@ public class OknoGlowne extends JFrame implements Observable {
         }
     }
 
-    //Akcja Parametry Generacji
+    //Akcja Parameters Generacji
     private void menuItemParametryGeneracjiActionPerformed(ActionEvent e) {
 
-        WczytywanieParametrow dialog = new WczytywanieParametrow( this, parametry );
+        WczytywanieParametrow dialog = new WczytywanieParametrow( this, parameters);
 
         dialog.setVisible( true );
 
@@ -132,7 +132,7 @@ public class OknoGlowne extends JFrame implements Observable {
 
     private void buttonStartActionPerformed(ActionEvent e) {
 
-        Wizualizacja dialog = new Wizualizacja( this, parametry );
+        Wizualizacja dialog = new Wizualizacja( this, parameters);
 
         dialog.dodajObserwatora( automatKomorkowy );
 
@@ -231,7 +231,7 @@ public class OknoGlowne extends JFrame implements Observable {
                 menuOpcje.setText("Opcje");
 
                 //---- menuItemParametryGeneracji ----
-                menuItemParametryGeneracji.setText("Parametry generacji");
+                menuItemParametryGeneracji.setText("Parameters generacji");
                 menuItemParametryGeneracji.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {

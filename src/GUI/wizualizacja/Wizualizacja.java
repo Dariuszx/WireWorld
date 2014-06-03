@@ -6,14 +6,14 @@ package GUI.wizualizacja;
 
 import java.awt.event.*;
 import javax.swing.border.*;
-import Data.Parametry;
-import Data.Siatka;
-import Data.Zdarzenia;
+
+import Data.Events;
+import Data.Parameters;
+import Data.Mesh;
 import GUI.obslugaBledow.ObslugaBledowDialog;
+import Modules.ErrorHandling;
 import Modules.Observable;
 import Modules.Observer;
-import Modules.ObslugaBledow;
-import Modules.WyswietlSiatke;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import javax.swing.GroupLayout;
 
 public class Wizualizacja extends JDialog implements Observable, Runnable {
 
-    private Parametry parametry;
+    private Parameters parameters;
     private Thread threadRysowanieSiatki;
     private ArrayList<Observer> observerArrayList;
     private RysowanieSiatki rysowanie;
@@ -31,22 +31,22 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
 
     private volatile boolean stopThread = false;
 
-    public Wizualizacja( Frame owner, Parametry parametry ) {
+    public Wizualizacja( Frame owner, Parameters parameters ) {
 
         super(owner);
-        this.parametry = parametry;
+        this.parameters = parameters;
         this.observerArrayList = new ArrayList<Observer>();
 
         initComponents();
 
-        this.ustawieniaGraficzne = new Ustawienia( parametry.getWygenerowanaSiatka(), new Dimension( 709, 452 ) );
+        this.ustawieniaGraficzne = new Ustawienia( parameters.getGeneratedMesh(), new Dimension( 709, 452 ) );
 
         rysowanie = new RysowanieSiatki( ustawieniaGraficzne );
 
 
-        rysuj( parametry.getSiatka() );
+        rysuj( parameters.getMesh() );
 
-        if( parametry.getSiatka() != null ) {
+        if( parameters.getMesh() != null ) {
             buttonStart.setEnabled( true );
         }
     }
@@ -74,10 +74,10 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
         try {
 
             for ( Observer o : observerArrayList ) {
-                o.update(parametry);
+                o.update(parameters);
             }
 
-        } catch( ObslugaBledow e ) {
+        } catch( ErrorHandling e ) {
 
             new ObslugaBledowDialog( this, e.toString() ).setVisible( true );
         }
@@ -86,36 +86,36 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
     @Override
     public void run() {
 
-        int numerGneracji =  parametry.getGeneracjaIndex();
+        int numerGneracji =  parameters.getGeneracjaIndex();
 
-        while( !stopThread && parametry.getGeneracjaIndex() < parametry.getIloscGeneracji() ) { //Tutaj rysuję kolejne generacje siatek
+        while( !stopThread && parameters.getGeneracjaIndex() < parameters.getNumberOfGenerations() ) { //Tutaj rysuję kolejne generacje siatek
             powiadomObserwatorow();
-            //labelGeneracjaIndex.setText( Integer.toString( parametry.getGeneracjaIndex() ) );
+            //labelGeneracjaIndex.setText( Integer.toString( parameters.getGeneracjaIndex() ) );
 
-            if( numerGneracji != parametry.getGeneracjaIndex() ) {
-                numerGneracji = parametry.getGeneracjaIndex();
+            if( numerGneracji != parameters.getGeneracjaIndex() ) {
+                numerGneracji = parameters.getGeneracjaIndex();
 
-                rysuj( parametry.getWygenerowanaSiatka() );
+                rysuj( parameters.getGeneratedMesh() );
 
-                labelGeneracjaIndex.setText( Integer.toString( parametry.getGeneracjaIndex() ) );
+                labelGeneracjaIndex.setText( Integer.toString( parameters.getGeneracjaIndex() ) );
             }
         }
 
-        if( parametry.getGeneracjaIndex() >= parametry.getIloscGeneracji() ) {
+        if( parameters.getGeneracjaIndex() >= parameters.getNumberOfGenerations() ) {
 
             buttonStart.setEnabled(true);
             buttonStop.setEnabled(false);
             buttonPauza.setEnabled(false);
 
-            parametry.setWygenerowanaSiatka( parametry.getSiatka() );
-            parametry.setGeneracjIndex( 0 );
+            parameters.setGeneratedMesh(parameters.getMesh());
+            parameters.setGeneracjIndex( 0 );
         }
 
     }
 
-    private void rysuj( Siatka siatka ) {
+    private void rysuj( Mesh mesh ) {
 
-        rysowanie.setSiatka( siatka );
+        rysowanie.setMesh(mesh);
 
         panelCanvas.add( rysowanie );
 
@@ -138,13 +138,13 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
 
         stopThread = true;
 
-        parametry.setWygenerowanaSiatka( parametry.getSiatka() );
+        parameters.setGeneratedMesh(parameters.getMesh());
     }
 
     private void buttonStartActionPerformed(ActionEvent e) {
 
-        parametry.setGeneracjaStarted(true);
-        parametry.setAutomatKomorkowyZdarzenie( Zdarzenia.START );
+        parameters.setGeneracjaStarted(true);
+        parameters.setAutomatKomorkowyZdarzenie( Events.START );
 
         buttonStart.setEnabled( false );
         buttonPauza.setEnabled( true );
@@ -152,14 +152,14 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
 
         powiadomObserwatorow();
 
-        rysuj( parametry.getSiatka() );
+        rysuj( parameters.getMesh() );
 
         rozpocznijGenerowanie();
     }
 
     private void buttonStopActionPerformed(ActionEvent e) {
 
-        parametry.setAutomatKomorkowyZdarzenie(Zdarzenia.STOP);
+        parameters.setAutomatKomorkowyZdarzenie(Events.STOP);
 
         buttonStop.setEnabled(false);
         buttonPauza.setEnabled( false );
@@ -171,7 +171,7 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
 
     private void buttonPauzaActionPerformed(ActionEvent e) {
 
-        parametry.setAutomatKomorkowyZdarzenie( Zdarzenia.PAUZA );
+        parameters.setAutomatKomorkowyZdarzenie( Events.PAUZA );
 
         buttonStart.setEnabled(true);
         buttonPauza.setEnabled(false);
@@ -289,7 +289,7 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
 
         //======== panelSiatka ========
         {
-            panelSiatka.setBorder(new TitledBorder("Siatka wygenerowana"));
+            panelSiatka.setBorder(new TitledBorder("Mesh wygenerowana"));
 
             //======== panelCanvas ========
             {

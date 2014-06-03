@@ -1,7 +1,7 @@
 package GUI.wizualizacja;
 
 
-import Data.Siatka;
+import Data.Mesh;
 
 import java.awt.*;
 
@@ -14,12 +14,12 @@ public class Ustawienia {
 
     public int szerokoscKwadratu = 10;
 
-    public Ustawienia( Siatka siatka, Dimension wymiaryPanelu ) {
+    public Ustawienia( Mesh mesh, Dimension wymiaryPanelu ) {
 
         this.wymiaryPanelu = wymiaryPanelu;
 
-        int szerokoscSiatki = siatka.getLiczbaKolumn() * szerokoscKwadratu + siatka.getLiczbaKolumn();
-        int wysokoscSiatki = siatka.getLiczbaWierszy() * szerokoscKwadratu + siatka.getLiczbaWierszy();
+        int szerokoscSiatki = mesh.getNumberOfColumns() * szerokoscKwadratu + mesh.getNumberOfColumns();
+        int wysokoscSiatki = mesh.getNumberOfRows() * szerokoscKwadratu + mesh.getNumberOfRows();
 
         topLeftCorner = new Point( (wymiaryPanelu.width - szerokoscSiatki) / 2, (wymiaryPanelu.height - wysokoscSiatki) / 2 );
         botRightCorner = new Point( topLeftCorner.x + szerokoscSiatki, topLeftCorner.y + wysokoscSiatki );
