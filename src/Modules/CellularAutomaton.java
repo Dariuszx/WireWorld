@@ -4,14 +4,13 @@ import Data.Events;
 import Data.Parameters;
 import Data.Mesh;
 
-public class AutomatKomorkowy implements Observer {
+public class CellularAutomaton implements Observer {
 
     private Parameters parameters;
-    private Mesh aktualnaGeneracja;
-    private ZarzadzanieCzasem zarzadzanieCzasem;
+    private TimeManagement timeManagement;
 
 
-    public AutomatKomorkowy( Parameters parameters ) {
+    public CellularAutomaton( Parameters parameters ) {
 
         this.parameters = parameters;
     }
@@ -23,13 +22,13 @@ public class AutomatKomorkowy implements Observer {
         switch( parameters.getEventOccurred() ) {
 
             case START:
-                zarzadzanieCzasem = new ZarzadzanieCzasem( parameters.getInterval() );
+                timeManagement = new TimeManagement( parameters.getInterval() );
                 parameters.setGeneracjaStarted( true );
 
                 break;
             case RESTART:
 
-                zarzadzanieCzasem = new ZarzadzanieCzasem( parameters.getInterval() );
+                timeManagement = new TimeManagement( parameters.getInterval() );
                 parameters.setGeneracjaStarted( true );
                 parameters.getMesh().copyMesh(parameters.getGeneratedMesh());
                 parameters.setGeneracjIndex( 0 );
@@ -53,41 +52,36 @@ public class AutomatKomorkowy implements Observer {
         if( parameters.getGeneracjaStarted() == true && parameters.getIndexOfGenerations() < parameters.getNumberOfGenerations() ) {
 
             //Sprawdzam czy od ostatniej generacji upłynął wymagany czas
-            if( zarzadzanieCzasem.czyUplynalCzas() == true ) {
+            if( timeManagement.czyUplynalCzas() == true ) {
 
                 //Jeżeli czas upłynał to tworzę nową generację
-                stworzGeneracje();
+                createGeneration();
                 //System.out.println( "TWORZĘ GENERACJĘ NR " + parameters.getIndexOfGenerations() );
-                zarzadzanieCzasem.setCzasOstatniejGeneracji(); //ustawiam czas wygenerowania generacji
+                timeManagement.setCzasOstatniejGeneracji(); //ustawiam czas wygenerowania generacji
             }
         }
     }
 
-    private void stworzGeneracje() throws ErrorHandling {
+    private void createGeneration() throws ErrorHandling {
 
         parameters.setGeneracjIndex( parameters.getIndexOfGenerations() + 1 ); //zwiększam index o 1
 
-        //System.out.println( "Upłynęło " + parameters.getInterval() + " milisekund. Tworzę generację nr " + parameters.getIndexOfGenerations() );
+        Mesh tmp = new Mesh(); /* Siatka tymczasowa */
 
-        Mesh tmp = new Mesh(); //Mesh tymczasowa
+        parameters.getGeneratedMesh().copyMesh(tmp); /* Kopiuję siatkę aktualnej generacji do zmiennej tymczasowej */
 
-        parameters.getGeneratedMesh().copyMesh(tmp); //Kopiuję siatkę aktualnej generacji do zmiennej tymczasowej
-
-        Zasady zasady = new Zasady( parameters.getGeneratedMesh() );
+        Rules rules = new Rules( parameters.getGeneratedMesh() );
 
         for( int i=0; i < tmp.getNumberOfColumns(); i++ ) {
 
             for( int j=0; j < tmp.getNumberOfRows(); j++ ) {
 
                 if( tmp.getCell(i, j).getCondition() != 0 )
-                    zasady.zmienStan( i, j, tmp.getCell(i, j) );
+                    rules.zmienStan( i, j, tmp.getCell(i, j) );
             }
         }
 
-        //Już po generacji, kopiuję siatkę tmp do Siatki wygenerowanaSiatka
+        /* Już po generacji, kopiuję siatkę tmp do Siatki wygenerowanaSiatka */
         tmp.copyMesh(parameters.getGeneratedMesh());
-
-        new WyswietlSiatke( parameters.getGeneratedMesh() );
-
     }
 }

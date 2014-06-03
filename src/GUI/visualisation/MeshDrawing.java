@@ -6,15 +6,11 @@ import Modules.ErrorHandling;
 
 import java.awt.*;
 
-public class RysowanieSiatki extends Canvas {
+public class MeshDrawing extends Canvas {
 
     private Mesh mesh;
-    private Ustawienia ustawienia;
 
-    public RysowanieSiatki( Ustawienia ustawienia ) {
-
-        this.ustawienia = ustawienia;
-    }
+    public MeshDrawing() { }
 
     public void setMesh( Mesh mesh ) {
         this.mesh = mesh;
@@ -46,19 +42,13 @@ public class RysowanieSiatki extends Canvas {
                             break;
                     }
 
-                    g.fillRect( ustawienia.topLeftCorner.x + i*ustawienia.szerokoscKwadratu + i,
-                                    ustawienia.topLeftCorner.y + j*ustawienia.szerokoscKwadratu + j,
-                                        ustawienia.szerokoscKwadratu, ustawienia.szerokoscKwadratu );
+                    g.fillRect( 0 + i * 10 + i, 0 + j * 10  + j, 10, 10 );
 
                 } catch( ErrorHandling e ) {
-                    System.out.println( e.toString() );
+
+
                 }
             }
         }
     }
-/*
-    public void update( Graphics g ) {
-        paint( g );
-    }
-    */
 }

@@ -1,12 +1,12 @@
 package Modules;
 
-public class ZarzadzanieCzasem {
+public class TimeManagement {
 
     private long czasOstatniejGeneracji;
     private long roznicaCzasu = 0;
     private long odstepCzasu;
 
-    public ZarzadzanieCzasem( long odstepCzasu ) {
+    public TimeManagement( long odstepCzasu ) {
 
         this.odstepCzasu = odstepCzasu;
         this.czasOstatniejGeneracji = getTime();

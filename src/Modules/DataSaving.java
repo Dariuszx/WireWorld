@@ -25,14 +25,13 @@ public class DataSaving implements Observer {
 
             this.parameters = parameters;
 
-            System.out.println( "Aktualizuje moduł zapisywania plików." );
-
             try {
 
-                parameters.setGeneratedMesh(parameters.getMesh());
+                //parameters.setGeneratedMesh(parameters.getMesh());
 
                 file.openFile( parameters.getPathToOutputFileMesh() );
-                zapiszDoPliku( parameters.getPathToOutputFileMesh() );
+
+                saveToFile(parameters.getPathToOutputFileMesh());
 
             } catch( IOException e ) {
                 throw new ErrorHandling( e.getMessage() );
@@ -41,16 +40,18 @@ public class DataSaving implements Observer {
 
     }
 
-    private void zapiszDoPliku( String sciezkaDoPliku ) throws FileNotFoundException, ErrorHandling {
+    private void saveToFile( String pathToFile ) throws FileNotFoundException, ErrorHandling {
 
         Cell cell;
-        PrintWriter zapis = new PrintWriter( sciezkaDoPliku );
+        PrintWriter zapis = new PrintWriter( pathToFile );
 
         zapis.println( parameters.getGeneratedMesh().getNumberOfColumns() + " " + parameters.getGeneratedMesh().getNumberOfRows() );
 
-        for( int i=0; i < parameters.getGeneratedMesh().getNumberOfColumns(); i++ ) {
+        for( int i=0; i < parameters.getGeneratedMesh().getNumberOfColumns(); i++ )
+        {
 
-            for( int j=0; j < parameters.getGeneratedMesh().getNumberOfRows(); j++ ) {
+            for( int j=0; j < parameters.getGeneratedMesh().getNumberOfRows(); j++ )
+            {
 
                 cell = parameters.getGeneratedMesh().getCell(i, j);
                 if( cell.getCondition() != 0 )
@@ -59,7 +60,6 @@ public class DataSaving implements Observer {
         }
 
         zapis.close();
-        System.out.println( "Zapisuje dane do pliku " + sciezkaDoPliku );
     }
 
 }

@@ -14,24 +14,24 @@ import GUI.obslugaBledow.ObslugaBledowDialog;
 import Modules.ErrorHandling;
 import Modules.Observable;
 import Modules.Observer;
+import Modules.WyswietlSiatke;
 
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 
-public class Wizualizacja extends JDialog implements Observable, Runnable {
+public class Visualisation extends JDialog implements Observable, Runnable {
 
     private Parameters parameters;
     private Thread threadRysowanieSiatki;
     private ArrayList<Observer> observerArrayList;
-    private RysowanieSiatki rysowanie;
-    private Ustawienia ustawieniaGraficzne;
+    private MeshDrawing rysowanie;
 
 
     private volatile boolean stopThread = false;
 
-    public Wizualizacja( Frame owner, Parameters parameters ) {
+    public Visualisation( Frame owner, Parameters parameters ) {
 
         super(owner);
         this.parameters = parameters;
@@ -39,10 +39,9 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
 
         initComponents();
 
-        this.ustawieniaGraficzne = new Ustawienia( parameters.getGeneratedMesh(), new Dimension( 709, 452 ) );
+        new WyswietlSiatke( parameters.getMesh() );
 
-        rysowanie = new RysowanieSiatki( ustawieniaGraficzne );
-
+        rysowanie = new MeshDrawing();
 
         rysuj( parameters.getMesh() );
 
@@ -51,7 +50,7 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
         }
     }
 
-    public Wizualizacja(Dialog owner) {
+    public Visualisation( Dialog owner ) {
 
         super(owner);
         initComponents();
@@ -212,13 +211,14 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
         {
             panelNarzedzia.setBorder(new TitledBorder("Przybornik"));
 
+            /*
             // JFormDesigner evaluation mark
             panelNarzedzia.setBorder(new javax.swing.border.CompoundBorder(
                 new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
                     "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
                     javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
                     java.awt.Color.red), panelNarzedzia.getBorder())); panelNarzedzia.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
-
+*/
 
             //---- buttonStart ----
             buttonStart.setText("Start");
@@ -289,7 +289,7 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
 
         //======== panelSiatka ========
         {
-            panelSiatka.setBorder(new TitledBorder("Mesh wygenerowana"));
+            panelSiatka.setBorder(new TitledBorder("Siatka wygenerowana"));
 
             //======== panelCanvas ========
             {

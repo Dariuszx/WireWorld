@@ -1,0 +1,45 @@
+JFDML JFormDesigner: "5.2.0.0.109" Java: "1.7.0_55" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq t {space :::p, comp panelSiatka:::p::p, space :::p, par l {comp panelPrzybornik:::::x, comp panelNarzedzia:::::x}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l {comp panelSiatka:::::x, seq {comp panelPrzybornik:::p::p, space :::p, comp panelNarzedzia:::::x}}, space :::p}}"
+		} ) {
+			name: "this"
+			"title": "Edytuj siatkę"
+			"modal": true
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {space :0:172:x}"
+				"$verticalGroup": "par l {space :0:182:x}"
+			} ) {
+				name: "panelPrzybornik"
+				"border": new javax.swing.border.TitledBorder( "Przybornik" )
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq l {space :::p, comp panelCanvas:::::x, space :::p}}"
+				"$verticalGroup": "par l {seq t {comp panelCanvas:::::x, space :::p}}"
+			} ) {
+				name: "panelSiatka"
+				"border": new javax.swing.border.TitledBorder( "Siatka" )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {space :0:476:x}"
+					"$verticalGroup": "par l {space :0:405:x}"
+				} ) {
+					name: "panelCanvas"
+				} )
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {space :0:172:x}"
+				"$verticalGroup": "par l {space :0:202:x}"
+			} ) {
+				name: "panelNarzedzia"
+				"border": new javax.swing.border.TitledBorder( "Narzędzia" )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 5, 0 )
+			"size": new java.awt.Dimension( 710, 470 )
+		} )
+	}
+}

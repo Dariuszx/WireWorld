@@ -27,6 +27,9 @@ public class DataLoading implements Observer {
 
                 parameters.getMesh().setLoaded( false );
 
+                //parameters.getMesh().setNull();
+                //parameters.getGeneratedMesh().setNull();
+
                 //Muszę na nowo otworzyć plik
                 file.openFile( parameters.getPathToSourceFileMesh() );
 

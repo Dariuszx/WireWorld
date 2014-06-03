@@ -94,4 +94,12 @@ public class Mesh {
         this.isLoaded = flag;
     }
 
+    public void setNull() {
+
+        this.setLoaded( false );
+        this.numberOfColumns = 0;
+        this.numberOfRows = 0;
+        this.mesh = null;
+    }
+
 }

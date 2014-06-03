@@ -12,10 +12,11 @@ import javax.swing.GroupLayout;
 
 import Data.Events;
 import Data.Parameters;
+import GUI.editMesh.EditMesh;
 import GUI.openFile.OpenFile;
 import GUI.parametersLoading.ParametersLoading;
 import GUI.saveFile.SaveFile;
-import GUI.visualisation.Wizualizacja;
+import GUI.visualisation.Visualisation;
 import GUI.yesNoDialog.YesNoDialog;
 import GUI.obslugaBledow.ObslugaBledowDialog;
 import Modules.ErrorHandling;
@@ -45,7 +46,7 @@ public class MainWindow extends JFrame implements Observable, Observer {
 
         notifyObservers();
 
-        setVisible( true );
+        setVisible(true);
     }
 
     public void dodajObserwatorAutomatKomorkowy( Observer automatKomorkowy ) {
@@ -112,9 +113,11 @@ public class MainWindow extends JFrame implements Observable, Observer {
 
         if( returnValue == JFileChooser.APPROVE_OPTION ) {
 
+            parameters.setEventOccurred( Events.SAVE_FILE );
+
             String filePath = dialog.getSelectedFile().getAbsolutePath();
 
-            if( !dialog.getSelectedFile().getAbsolutePath().contains( ".stk" ) )
+            if( !dialog.getSelectedFile().getAbsolutePath().contains( ".stk" ) ) /* Sprawdzam czy nazwa zawiera ciąg .stk, jak nie to dodaje */
             {
                 filePath += ".stk";
             }
@@ -129,7 +132,7 @@ public class MainWindow extends JFrame implements Observable, Observer {
 
         OpenFile dialog = new OpenFile();
 
-        int returnValue = dialog.showOpenDialog( this );
+        int returnValue = dialog.showOpenDialog(this);
 
         if( returnValue == JFileChooser.APPROVE_OPTION ) {
 
@@ -167,11 +170,19 @@ public class MainWindow extends JFrame implements Observable, Observer {
 
     private void buttonStartActionPerformed( ActionEvent e ) { /* Otwieram okno Automatu Komórkowego */
 
-        Wizualizacja dialog = new Wizualizacja( this, parameters);
+        Visualisation dialog = new Visualisation( this, parameters);
 
         dialog.addObserver(automatKomorkowy);
 
+        dialog.setVisible(true);
+    }
+
+    private void buttonEdytujSiatkeActionPerformed( ActionEvent e ) {
+
+        EditMesh dialog = new EditMesh( this, parameters );
+
         dialog.setVisible( true );
+
     }
 
     private void thisWindowClosing( WindowEvent e ) {
@@ -203,10 +214,12 @@ public class MainWindow extends JFrame implements Observable, Observer {
         menuItemExit = new JMenuItem();
         menuOpcje = new JMenu();
         menuItemParametryGeneracji = new JMenuItem();
-        menuItemOkreslZasady = new JMenuItem();
         menuPomoc = new JMenu();
         menuItemOProgramie = new JMenuItem();
         buttonStart = new JButton();
+        label1 = new JLabel();
+        label2 = new JLabel();
+        buttonEdytujSiatke = new JButton();
 
         //======== this ========
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -266,18 +279,15 @@ public class MainWindow extends JFrame implements Observable, Observer {
                 menuOpcje.setText("Opcje");
 
                 //---- menuItemParametryGeneracji ----
-                menuItemParametryGeneracji.setText("Parameters generacji");
+                menuItemParametryGeneracji.setText("Parametry generacji");
                 menuItemParametryGeneracji.addActionListener(new ActionListener() {
                     @Override
-                    public void actionPerformed(ActionEvent e) {
+                    public void actionPerformed( ActionEvent e ) {
+
                         menuItemParametryGeneracjiActionPerformed(e);
                     }
                 });
                 menuOpcje.add(menuItemParametryGeneracji);
-
-                //---- menuItemOkreslZasady ----
-                menuItemOkreslZasady.setText("Okre\u015bl zasady");
-                menuOpcje.add(menuItemOkreslZasady);
             }
             mainMenuBar.add(menuOpcje);
 
@@ -303,21 +313,56 @@ public class MainWindow extends JFrame implements Observable, Observer {
             }
         });
 
+        //---- label1 ----
+        label1.setText("WireWorld");
+        label1.setFont(label1.getFont().deriveFont(label1.getFont().getSize() + 10f));
+        label1.setHorizontalAlignment(SwingConstants.CENTER);
+
+        //---- label2 ----
+        label2.setText("Wireworld to dobrze znany automat kom\u00f3rkowy zaproponowany przez Briana Silvermana.");
+        label2.setVerticalAlignment(SwingConstants.TOP);
+        label2.setMinimumSize(new Dimension(575, 40));
+        label2.setHorizontalAlignment(SwingConstants.CENTER);
+
+        //---- buttonEdytujSiatke ----
+        buttonEdytujSiatke.setText("Edytuj siatk\u0119");
+        buttonEdytujSiatke.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+
+                buttonEdytujSiatkeActionPerformed(e);
+            }
+        });
+
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
             contentPaneLayout.createParallelGroup()
-                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                    .addContainerGap(160, Short.MAX_VALUE)
-                    .addComponent(buttonStart, GroupLayout.PREFERRED_SIZE, 190, GroupLayout.PREFERRED_SIZE)
-                    .addGap(158, 158, 158))
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(contentPaneLayout.createParallelGroup()
+                                .addComponent(label1, GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE)
+                                .addComponent(label2, GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE))
+                        .addContainerGap())
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                        .addGap(87, 87, 87)
+                        .addComponent(buttonStart, GroupLayout.PREFERRED_SIZE, 190, GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
+                        .addComponent(buttonEdytujSiatke, GroupLayout.PREFERRED_SIZE, 190, GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(103, Short.MAX_VALUE))
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addGap(25, 25, 25)
-                    .addComponent(buttonStart, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(34, Short.MAX_VALUE))
+                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(label1, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(label2, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                            .addComponent(buttonStart, GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
+                            .addComponent(buttonEdytujSiatke, GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE))
+                    .addContainerGap(47, Short.MAX_VALUE))
         );
         pack();
         setLocationRelativeTo(null);
@@ -333,10 +378,11 @@ public class MainWindow extends JFrame implements Observable, Observer {
     private JMenuItem menuItemExit;
     private JMenu menuOpcje;
     private JMenuItem menuItemParametryGeneracji;
-    private JMenuItem menuItemOkreslZasady;
     private JMenu menuPomoc;
     private JMenuItem menuItemOProgramie;
     private JButton buttonStart;
-
+    private JLabel label1;
+    private JLabel label2;
+    private JButton buttonEdytujSiatke;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

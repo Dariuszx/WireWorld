@@ -3,14 +3,14 @@ package Modules;
 import Data.Cell;
 import Data.Mesh;
 
-public class Zasady {
+public class Rules {
 
     private Cell zadana;
     private Mesh mesh;
     private int wspolrzedneKomorkiX;
     private int wsplrzedneKomorkiY;
 
-    public Zasady( Mesh mesh ) {
+    public Rules( Mesh mesh ) {
 
         this.mesh = mesh;
     }
