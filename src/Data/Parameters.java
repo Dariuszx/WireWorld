@@ -6,15 +6,16 @@ public class Parameters {
 
     private int numberOfGenerations = 10;
     private int interval = 500;
+    private int indexOfGenerations = 0;
     private String pathToSourceFileMesh = "";
     private String pathToOutputFileMesh = "";
+    private Events eventOccurred = Events.NONE;
     private Mesh generatedMesh;
     private Mesh mesh;
 
-    /* Dane Automatu Komorkowego */
+
     private boolean generacjaStarted = false;
-    private int generacjaIndex = 0;
-    private Events automatKomorkowyZdarzenie = Events.NONE;
+
 
 
     public Parameters() {
@@ -34,9 +35,14 @@ public class Parameters {
         return interval;
     }
 
-    public int getGeneracjaIndex() { return generacjaIndex; }
+    public int getIndexOfGenerations() { return indexOfGenerations; }
 
     public boolean getGeneracjaStarted() { return generacjaStarted; }
+
+    public boolean getIsMeshLoaded() {
+
+        return mesh.getLoaded();
+    }
 
     public String getPathToSourceFileMesh() { return pathToSourceFileMesh; }
 
@@ -46,9 +52,9 @@ public class Parameters {
 
     public Mesh getMesh() { return mesh; }
 
-    public Events getAutomatKomorkowyZdarzenie() {
+    public Events getEventOccurred() {
 
-        return automatKomorkowyZdarzenie;
+        return eventOccurred;
     }
 
 
@@ -94,12 +100,12 @@ public class Parameters {
 
     public void setGeneracjIndex( int index ) {
 
-        this.generacjaIndex = index;
+        this.indexOfGenerations = index;
     }
 
-    public void setAutomatKomorkowyZdarzenie( Events e ) {
+    public void setEventOccurred( Events e ) {
 
-        this.automatKomorkowyZdarzenie = e;
+        this.eventOccurred = e;
     }
 
 }

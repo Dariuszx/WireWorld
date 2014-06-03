@@ -2,7 +2,7 @@
  * Created by JFormDesigner on Sun May 25 18:25:23 CEST 2014
  */
 
-package GUI.wizualizacja;
+package GUI.visualisation;
 
 import java.awt.event.*;
 import javax.swing.border.*;
@@ -58,18 +58,18 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
     }
 
     @Override
-    public void dodajObserwatora( Observer o ) {
+    public void addObserver( Observer o ) {
 
         observerArrayList.add(o);
     }
 
     @Override
-    public void usunObserwatora( Observer o ) {
+    public void removeObserver( Observer o ) {
 
     }
 
     @Override
-    public void powiadomObserwatorow() {
+    public void notifyObservers() {
 
         try {
 
@@ -86,22 +86,22 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
     @Override
     public void run() {
 
-        int numerGneracji =  parameters.getGeneracjaIndex();
+        int numerGneracji =  parameters.getIndexOfGenerations();
 
-        while( !stopThread && parameters.getGeneracjaIndex() < parameters.getNumberOfGenerations() ) { //Tutaj rysuję kolejne generacje siatek
-            powiadomObserwatorow();
-            //labelGeneracjaIndex.setText( Integer.toString( parameters.getGeneracjaIndex() ) );
+        while( !stopThread && parameters.getIndexOfGenerations() < parameters.getNumberOfGenerations() ) { //Tutaj rysuję kolejne generacje siatek
+            notifyObservers();
+            //labelGeneracjaIndex.setText( Integer.toString( parameters.getIndexOfGenerations() ) );
 
-            if( numerGneracji != parameters.getGeneracjaIndex() ) {
-                numerGneracji = parameters.getGeneracjaIndex();
+            if( numerGneracji != parameters.getIndexOfGenerations() ) {
+                numerGneracji = parameters.getIndexOfGenerations();
 
                 rysuj( parameters.getGeneratedMesh() );
 
-                labelGeneracjaIndex.setText( Integer.toString( parameters.getGeneracjaIndex() ) );
+                labelGeneracjaIndex.setText( Integer.toString( parameters.getIndexOfGenerations() ) );
             }
         }
 
-        if( parameters.getGeneracjaIndex() >= parameters.getNumberOfGenerations() ) {
+        if( parameters.getIndexOfGenerations() >= parameters.getNumberOfGenerations() ) {
 
             buttonStart.setEnabled(true);
             buttonStop.setEnabled(false);
@@ -144,13 +144,13 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
     private void buttonStartActionPerformed(ActionEvent e) {
 
         parameters.setGeneracjaStarted(true);
-        parameters.setAutomatKomorkowyZdarzenie( Events.START );
+        parameters.setEventOccurred(Events.START);
 
         buttonStart.setEnabled( false );
         buttonPauza.setEnabled( true );
         buttonStop.setEnabled( true );
 
-        powiadomObserwatorow();
+        notifyObservers();
 
         rysuj( parameters.getMesh() );
 
@@ -159,19 +159,19 @@ public class Wizualizacja extends JDialog implements Observable, Runnable {
 
     private void buttonStopActionPerformed(ActionEvent e) {
 
-        parameters.setAutomatKomorkowyZdarzenie(Events.STOP);
+        parameters.setEventOccurred(Events.STOP);
 
         buttonStop.setEnabled(false);
         buttonPauza.setEnabled( false );
         buttonStart.setEnabled( true );
 
-        powiadomObserwatorow();
+        notifyObservers();
         zatrzymajGenerowanie();
     }
 
     private void buttonPauzaActionPerformed(ActionEvent e) {
 
-        parameters.setAutomatKomorkowyZdarzenie( Events.PAUZA );
+        parameters.setEventOccurred(Events.PAUSE);
 
         buttonStart.setEnabled(true);
         buttonPauza.setEnabled(false);

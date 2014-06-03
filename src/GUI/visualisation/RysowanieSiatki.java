@@ -1,4 +1,4 @@
-package GUI.wizualizacja;
+package GUI.visualisation;
 
 
 import Data.Mesh;
@@ -27,7 +27,7 @@ public class RysowanieSiatki extends Canvas {
             for( int j=0; j < mesh.getNumberOfRows(); j++ ) {
 
                 try {
-                    switch( mesh.getCell(i, j).getStan() ) {
+                    switch( mesh.getCell(i, j).getCondition() ) {
 
                         case 0:
                             g.setColor(Color.black);

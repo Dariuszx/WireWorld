@@ -1,8 +1,8 @@
 import Data.Parameters;
-import GUI.oknoGlowne.OknoGlowne;
+import GUI.MainWindow;
 import Modules.AutomatKomorkowy;
 import Modules.DataLoading;
-import Modules.ZapisywanieDanych;
+import Modules.DataSaving;
 
 
 public class Main {
@@ -11,14 +11,14 @@ public class Main {
 
         Parameters dane = new Parameters();
 
-        OknoGlowne window = new OknoGlowne( dane );
+        MainWindow window = new MainWindow( dane );
 
-        window.dodajObserwatora( new DataLoading() );
+        window.addObserver(new DataLoading());
 
-        window.dodajObserwatora( new ZapisywanieDanych() );
+        window.addObserver(new DataSaving());
 
         window.dodajObserwatorAutomatKomorkowy( new AutomatKomorkowy( dane ) );
 
-        window.setVisible(true);
+        window.start();
     }
 }

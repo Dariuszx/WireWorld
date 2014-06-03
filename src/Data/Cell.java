@@ -4,18 +4,23 @@ import Modules.ErrorHandling;
 
 public class Cell {
 
-    private int stan = 0;
+    private int condition = 0;
 
-    public Cell( int stan ) {
+    public Cell( int condition ) {
 
-        this.stan = stan;
+        this.condition = condition;
     }
 
-    public int getStan() { return stan; }
+    /* GET FUNCTIONS */
+    public int getCondition() {
 
-    public void setStan( int stan ) throws ErrorHandling {
+        return condition;
+    }
 
-        if( stan > 3 ) throw new ErrorHandling( "Niepoprawny stan komórki." );
-        this.stan = stan;
+    /* SET FUNCTIONS */
+    public void setCondition( int condition ) throws ErrorHandling {
+
+        if( condition > 3 ) throw new ErrorHandling( "Niepoprawny condition komórki." );
+        this.condition = condition;
     }
 }

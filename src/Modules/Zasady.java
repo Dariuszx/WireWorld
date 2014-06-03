@@ -22,32 +22,32 @@ public class Zasady {
         this.wsplrzedneKomorkiY = y;
 
         if( czyGlowa() ) {
-            zadana.setStan( 2 );
+            zadana.setCondition(2);
 
         } else if( czyOgon() ) {
-            zadana.setStan( 3 );
+            zadana.setCondition(3);
 
         } else if( czyPrzewodnik() ) {
 
-            zadana.setStan( 1 );
+            zadana.setCondition(1);
         }
     }
 
     private boolean czyGlowa() {
 
-        if( zadana.getStan() == 1 ) return true;
+        if( zadana.getCondition() == 1 ) return true;
         return false;
     }
 
     private boolean czyOgon() {
 
-        if( zadana.getStan() == 2 ) return true;
+        if( zadana.getCondition() == 2 ) return true;
         return false;
     }
 
     private boolean czyPrzewodnik() throws ErrorHandling {
 
-        if( zadana.getStan() != 3 ) return false;
+        if( zadana.getCondition() != 3 ) return false;
 
         int x = wspolrzedneKomorkiX;
         int y = wsplrzedneKomorkiY;
@@ -59,7 +59,7 @@ public class Zasady {
 
                 if( x+x1 >= 0 && y+y1 >= 0 && x+x1 < mesh.getNumberOfColumns() && y+y1 < mesh.getNumberOfRows() && ( x1 != 0 || y1 != 0 ) ) {
 
-                    if( mesh.getCell(x + x1, y + y1).getStan() == 1 ) {
+                    if( mesh.getCell(x + x1, y + y1).getCondition() == 1 ) {
                         count++;
                     }
                 }

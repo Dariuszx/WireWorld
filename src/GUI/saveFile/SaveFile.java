@@ -2,7 +2,7 @@
  * Created by JFormDesigner on Sat May 24 17:58:36 CEST 2014
  */
 
-package GUI.zapiszPlik;
+package GUI.saveFile;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -10,9 +10,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 /**
  * @author Dariusz Dybka
  */
-public class ZapiszPlik extends JFileChooser {
+public class SaveFile extends JFileChooser {
 
-    public ZapiszPlik() {
+    public SaveFile() {
 
         initComponents();
 

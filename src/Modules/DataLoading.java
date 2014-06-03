@@ -1,5 +1,6 @@
 package Modules;
 
+import Data.Events;
 import Data.Mesh;
 import Data.Parameters;
 
@@ -19,17 +20,24 @@ public class DataLoading implements Observer {
     @Override
     public void update( Parameters parameters ) throws ErrorHandling {
 
-        //Sprawdzam czy zmieniła się ścieżka do pliku, jeżeli tak to na nowo wczytuję dane
-        if ( !parameters.getPathToSourceFileMesh().equals(file.getFilePath()) ) {
+        //Sprawdzam czy użytkownik rząda otwarcia pliku
+        if ( parameters.getEventOccurred() == Events.OPEN_FILE ) {
 
             try {
-                //Muszę na nowo otworzyć file
+
+                parameters.getMesh().setLoaded( false );
+
+                //Muszę na nowo otworzyć plik
                 file.openFile( parameters.getPathToSourceFileMesh() );
 
-                loadData(parameters.getMesh());
+                loadData( parameters.getMesh() );
 
                 //Kopiuję wczytaną siatkę do siatki przechowującą generacje
-                parameters.getMesh().copyMesh(parameters.getGeneratedMesh());
+                parameters.getMesh().copyMesh( parameters.getGeneratedMesh() );
+
+                parameters.setEventOccurred( Events.NONE ); /* Wykonałem wymagane operacje, ustawiam na NULL */
+
+                parameters.getMesh().setLoaded( true );
 
             } catch( NumberFormatException e ) {
                 throw new ErrorHandling( e.toString() );

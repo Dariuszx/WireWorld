@@ -9,10 +9,11 @@ public class Mesh {
     private int numberOfRows;
     private int numberOfColumns;
 
+    private boolean isLoaded = false;
+
     public Mesh() {
 
     }
-
 
     public void makeMesh( int liczbaKolumn, int liczbaWierszy ) throws ErrorHandling { /* W tym miejscu tworzę siatke i zwracam ewentualne błędy */
 
@@ -29,6 +30,18 @@ public class Mesh {
 
     }
 
+    public void copyMesh( Mesh mesh1 ) throws ErrorHandling {
+
+        mesh1.makeMesh(this.numberOfColumns, this.numberOfRows);
+
+        for( int i=0; i < numberOfColumns; i++ ) {
+
+            for( int j=0; j < numberOfRows; j++ ) {
+                mesh1.setCondition(i, j, getCell(i, j).getCondition());
+            }
+        }
+    }
+
     private void initMesh() { /* Tutaj wypełniam utworzoną tablicę danymi */
 
         int i, j;
@@ -40,19 +53,20 @@ public class Mesh {
         }
     }
 
-    public void copyMesh( Mesh mesh1 ) throws ErrorHandling {
-
-        mesh1.makeMesh(this.numberOfColumns, this.numberOfRows);
-
-        for( int i=0; i < numberOfColumns; i++ ) {
-
-            for( int j=0; j < numberOfRows; j++ ) {
-                mesh1.setCondition(i, j, getCell(i, j).getStan());
-            }
-        }
+    /* GET FUNCTIONS */
+    public int getNumberOfRows() {
+        return numberOfRows;
     }
 
-    /* GET FUNCTIONS */
+    public int getNumberOfColumns() {
+        return numberOfColumns;
+    }
+
+    public boolean getLoaded() {
+
+        return isLoaded;
+    }
+
     public Cell getCell( int x, int y ) throws ErrorHandling {
 
         if( x >= numberOfColumns || y >= numberOfRows ) {
@@ -64,14 +78,6 @@ public class Mesh {
         }
     }
 
-    public int getNumberOfRows() {
-        return numberOfRows;
-    }
-
-    public int getNumberOfColumns() {
-        return numberOfColumns;
-    }
-
     /* SET FUNCTIONS */
     public void setCondition( int x, int y, int stan ) throws ErrorHandling { /* Ustawiam stan dla konkretnej komórki */
 
@@ -79,8 +85,13 @@ public class Mesh {
             throw new ErrorHandling( "Współrzędne komórki poza zakresem" );
         }
         else {
-            mesh[x][y].setStan(stan);
+            mesh[x][y].setCondition(stan);
         }
+    }
+
+    public void setLoaded( boolean flag ) {
+
+        this.isLoaded = flag;
     }
 
 }

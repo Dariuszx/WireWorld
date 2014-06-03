@@ -1,28 +1,27 @@
 package Modules;
 
 import Data.Cell;
+import Data.Events;
 import Data.Parameters;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class ZapisywanieDanych implements Observer {
+public class DataSaving implements Observer {
 
-    private FileHandling plik;
+    private FileHandling file;
     private Parameters parameters;
 
-    public ZapisywanieDanych() {
+    public DataSaving() {
 
-        this.plik = new FileHandling();
+        this.file = new FileHandling();
     }
 
     @Override
     public void update( Parameters parameters ) throws ErrorHandling {
 
-
-
-        if( !plik.getFilePath().equals( parameters.getPathToOutputFileMesh() )  ) {
+        if( parameters.getEventOccurred() == Events.SAVE_FILE ) {
 
             this.parameters = parameters;
 
@@ -32,7 +31,7 @@ public class ZapisywanieDanych implements Observer {
 
                 parameters.setGeneratedMesh(parameters.getMesh());
 
-                plik.openFile( parameters.getPathToOutputFileMesh() );
+                file.openFile( parameters.getPathToOutputFileMesh() );
                 zapiszDoPliku( parameters.getPathToOutputFileMesh() );
 
             } catch( IOException e ) {
@@ -54,8 +53,8 @@ public class ZapisywanieDanych implements Observer {
             for( int j=0; j < parameters.getGeneratedMesh().getNumberOfRows(); j++ ) {
 
                 cell = parameters.getGeneratedMesh().getCell(i, j);
-                if( cell.getStan() != 0 )
-                    zapis.println( i + " " + j + " " + cell.getStan() );
+                if( cell.getCondition() != 0 )
+                    zapis.println( i + " " + j + " " + cell.getCondition() );
             }
         }
 

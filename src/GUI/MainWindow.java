@@ -2,7 +2,7 @@
  * Created by JFormDesigner on Thu May 22 20:41:12 CEST 2014
  */
 
-package GUI.oknoGlowne;
+package GUI;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -10,30 +10,42 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 
+import Data.Events;
 import Data.Parameters;
 import GUI.openFile.OpenFile;
-import GUI.wczytywanieParametrow.WczytywanieParametrow;
-import GUI.wizualizacja.Wizualizacja;
+import GUI.parametersLoading.ParametersLoading;
+import GUI.saveFile.SaveFile;
+import GUI.visualisation.Wizualizacja;
 import GUI.yesNoDialog.YesNoDialog;
-import GUI.zapiszPlik.ZapiszPlik;
 import GUI.obslugaBledow.ObslugaBledowDialog;
 import Modules.ErrorHandling;
 import Modules.Observable;
 import Modules.Observer;
 
 
-public class OknoGlowne extends JFrame implements Observable {
+public class MainWindow extends JFrame implements Observable, Observer {
 
-    private ArrayList<Observer> obserwatorzy;
+    private ArrayList<Observer> observers;
     private Parameters parameters;
 
     private Observer automatKomorkowy;
 
-    public OknoGlowne( Parameters parameters ) {
+    public MainWindow( Parameters parameters ) {
 
         this.parameters = parameters;
+        this.observers = new ArrayList<Observer>();
+
         initComponents();
-        obserwatorzy = new ArrayList<Observer>();
+        
+    }
+
+    public void start() {
+
+        addObserver( this );
+
+        notifyObservers();
+
+        setVisible( true );
     }
 
     public void dodajObserwatorAutomatKomorkowy( Observer automatKomorkowy ) {
@@ -42,22 +54,22 @@ public class OknoGlowne extends JFrame implements Observable {
     }
 
     @Override
-    public void dodajObserwatora( Observer o ) {
+    public void addObserver( Observer o ) {
 
-        obserwatorzy.add( o );
+        observers.add(o);
     }
 
     @Override
-    public void usunObserwatora( Observer o ) {
+    public void removeObserver( Observer o ) {
 
-        int index = obserwatorzy.indexOf(o);
-        obserwatorzy.remove(index);
+        int index = observers.indexOf(o);
+        observers.remove(index);
     }
 
     @Override
-    public void powiadomObserwatorow() {
+    public void notifyObservers() {
 
-        for( Observer o : obserwatorzy ) {
+        for( Observer o : observers ) {
             try {
 
                 o.update(parameters);
@@ -68,51 +80,75 @@ public class OknoGlowne extends JFrame implements Observable {
         }
     }
 
-    private void menuItemExitActionPerformed(ActionEvent e) {
+    @Override
+    public void update( Parameters parameters ) throws ErrorHandling {
+
+        if( parameters.getIsMeshLoaded() )
+        {
+            buttonStart.setEnabled( true );
+            menuItemZapiszDoPliku.setEnabled( true );
+            menuItemParametryGeneracji.setEnabled( true );
+        }
+        else
+        {
+            buttonStart.setEnabled( false );
+            menuItemZapiszDoPliku.setEnabled( false );
+            menuItemParametryGeneracji.setEnabled( false );
+        }
+
+
+    }
+
+    private void menuItemExitActionPerformed( ActionEvent e ) {
 
         closingOperation();
     }
 
-    //Akcja Zapisz Do Pliku
-    private void menuItemZapiszDoPlikuActionPerformed(ActionEvent e) {
+    private void menuItemZapiszDoPlikuActionPerformed( ActionEvent e ) { /* Zapisywanie danych do pliku */
 
-        ZapiszPlik dialog = new ZapiszPlik();
+        SaveFile dialog = new SaveFile();
 
-        int returnVal = dialog.showSaveDialog( this );
+        int returnValue = dialog.showSaveDialog( this );
 
-        if( returnVal == JFileChooser.APPROVE_OPTION ) {
+        if( returnValue == JFileChooser.APPROVE_OPTION ) {
 
             String filePath = dialog.getSelectedFile().getAbsolutePath();
 
-            if( !dialog.getSelectedFile().getAbsolutePath().contains( ".stk" ) ) {
+            if( !dialog.getSelectedFile().getAbsolutePath().contains( ".stk" ) )
+            {
                 filePath += ".stk";
             }
 
-            parameters.setPathToOutputFileMesh(filePath);
+            parameters.setPathToOutputFileMesh( filePath );
 
-            powiadomObserwatorow();
+            notifyObservers();
         }
     }
 
-    //Akcja Otwórz Plik
-    private void menuItemOtworzPlikActionPerformed(ActionEvent e) {
+    private void menuItemOtworzPlikActionPerformed( ActionEvent e ) { /* Otwieram plik, aby wczytać siatkę. */
 
         OpenFile dialog = new OpenFile();
 
-        int returnVal = dialog.showOpenDialog(this);
+        int returnValue = dialog.showOpenDialog( this );
 
-        if( returnVal == JFileChooser.APPROVE_OPTION ) {
+        if( returnValue == JFileChooser.APPROVE_OPTION ) {
 
-            parameters.setPathToSourceFileMesh(dialog.getSelectedFile().getAbsolutePath());
+            parameters.setPathToSourceFileMesh( dialog.getSelectedFile().getAbsolutePath() ); /* Ustawiam wczytany plik. */
 
-            powiadomObserwatorow();
+            parameters.setEventOccurred( Events.OPEN_FILE );
 
-            if( parameters.getMesh() != null ) {
-                buttonStart.setEnabled( true );
-                try {
-                    parameters.getMesh().copyMesh(parameters.getGeneratedMesh());
-                    menuItemZapiszDoPliku.setEnabled( true );
-                } catch ( ErrorHandling error ) {
+            notifyObservers(); /* Powiadamiam obserwatorów o zmianach */
+
+            if( parameters.getIsMeshLoaded() ) /* Jeżeli wczytano siatkę */
+            {
+
+                try
+                {
+                    parameters.getMesh().copyMesh( parameters.getGeneratedMesh() ); /* Kopiuję otwartą siatke do tej, z której będe tworzył generacje */
+                    menuItemZapiszDoPliku.setEnabled( true ); /* Włączam możliwość zapisania danych do pliku. */
+                }
+                catch ( ErrorHandling error )
+                {
                     new ObslugaBledowDialog( this, error.toString() ).setVisible( true );
                 }
 
@@ -120,33 +156,32 @@ public class OknoGlowne extends JFrame implements Observable {
         }
     }
 
-    //Akcja Parameters Generacji
-    private void menuItemParametryGeneracjiActionPerformed(ActionEvent e) {
+    private void menuItemParametryGeneracjiActionPerformed( ActionEvent e ) { /* Menu, w którym określam parametry generacji */
 
-        WczytywanieParametrow dialog = new WczytywanieParametrow( this, parameters);
+        ParametersLoading dialog = new ParametersLoading( this, parameters );
 
         dialog.setVisible( true );
 
-        powiadomObserwatorow();
+        notifyObservers();
     }
 
-    private void buttonStartActionPerformed(ActionEvent e) {
+    private void buttonStartActionPerformed( ActionEvent e ) { /* Otwieram okno Automatu Komórkowego */
 
         Wizualizacja dialog = new Wizualizacja( this, parameters);
 
-        dialog.dodajObserwatora( automatKomorkowy );
+        dialog.addObserver(automatKomorkowy);
 
         dialog.setVisible( true );
     }
 
-    private void thisWindowClosing(WindowEvent e) {
+    private void thisWindowClosing( WindowEvent e ) {
 
         closingOperation();
     }
 
     private void closingOperation() {
 
-        YesNoDialog dialog = new YesNoDialog(this);
+        YesNoDialog dialog = new YesNoDialog( this );
         dialog.setVisible(true);
 
         if( dialog.getOptionSelected() ) close();
@@ -154,7 +189,7 @@ public class OknoGlowne extends JFrame implements Observable {
 
     private void close() {
 
-        this.setVisible(false);
+        this.setVisible( false );
         this.dispose();
     }
 
@@ -302,5 +337,6 @@ public class OknoGlowne extends JFrame implements Observable {
     private JMenu menuPomoc;
     private JMenuItem menuItemOProgramie;
     private JButton buttonStart;
+
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

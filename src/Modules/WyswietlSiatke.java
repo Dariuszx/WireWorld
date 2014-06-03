@@ -12,7 +12,7 @@ public class WyswietlSiatke {
 
             for ( int i = 0; i < mesh.getNumberOfColumns(); i++ ) {
                 for ( int j = 0; j < mesh.getNumberOfRows(); j++ ) {
-                    System.out.print(mesh.getCell(i, j).getStan() + " ");
+                    System.out.print(mesh.getCell(i, j).getCondition() + " ");
                 }
                 System.out.println();
             }

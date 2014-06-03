@@ -2,7 +2,7 @@
  * Created by JFormDesigner on Sat May 24 14:40:12 CEST 2014
  */
 
-package GUI.wczytywanieParametrow;
+package GUI.parametersLoading;
 
 import java.awt.event.*;
 import Data.Parameters;
@@ -12,11 +12,11 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 
-public class WczytywanieParametrow extends JDialog {
+public class ParametersLoading extends JDialog {
 
     private Parameters parameters;
 
-    public WczytywanieParametrow(Frame owner, Parameters parameters ) {
+    public ParametersLoading( Frame owner, Parameters parameters ) {
 
         super(owner);
         this.parameters = parameters;
@@ -26,7 +26,7 @@ public class WczytywanieParametrow extends JDialog {
         inputOdstepCzasu.setText( Integer.toString( parameters.getInterval() ) );
     }
 
-    public WczytywanieParametrow(Dialog owner) {
+    public ParametersLoading( Dialog owner ) {
         super(owner);
         initComponents();
     }

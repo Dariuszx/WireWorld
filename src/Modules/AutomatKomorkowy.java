@@ -20,7 +20,7 @@ public class AutomatKomorkowy implements Observer {
     public void update( Parameters parameters ) throws ErrorHandling {
 
         /* Tutaj sprawdzam jaki przycisk został wciśnięty i odpowiednio reaguję */
-        switch( parameters.getAutomatKomorkowyZdarzenie() ) {
+        switch( parameters.getEventOccurred() ) {
 
             case START:
                 zarzadzanieCzasem = new ZarzadzanieCzasem( parameters.getInterval() );
@@ -41,23 +41,23 @@ public class AutomatKomorkowy implements Observer {
                 parameters.setGeneracjaStarted( false );
                 break;
 
-            case PAUZA:
+            case PAUSE:
                 parameters.setGeneracjaStarted( false );
                 break;
 
         }
 
-        parameters.setAutomatKomorkowyZdarzenie( Events.NONE );
+        parameters.setEventOccurred(Events.NONE);
 
         //Jeżeli jest uruchomiony proces tworzenia generacji
-        if( parameters.getGeneracjaStarted() == true && parameters.getGeneracjaIndex() < parameters.getNumberOfGenerations() ) {
+        if( parameters.getGeneracjaStarted() == true && parameters.getIndexOfGenerations() < parameters.getNumberOfGenerations() ) {
 
             //Sprawdzam czy od ostatniej generacji upłynął wymagany czas
             if( zarzadzanieCzasem.czyUplynalCzas() == true ) {
 
                 //Jeżeli czas upłynał to tworzę nową generację
                 stworzGeneracje();
-                //System.out.println( "TWORZĘ GENERACJĘ NR " + parameters.getGeneracjaIndex() );
+                //System.out.println( "TWORZĘ GENERACJĘ NR " + parameters.getIndexOfGenerations() );
                 zarzadzanieCzasem.setCzasOstatniejGeneracji(); //ustawiam czas wygenerowania generacji
             }
         }
@@ -65,9 +65,9 @@ public class AutomatKomorkowy implements Observer {
 
     private void stworzGeneracje() throws ErrorHandling {
 
-        parameters.setGeneracjIndex( parameters.getGeneracjaIndex() + 1 ); //zwiększam index o 1
+        parameters.setGeneracjIndex( parameters.getIndexOfGenerations() + 1 ); //zwiększam index o 1
 
-        //System.out.println( "Upłynęło " + parameters.getInterval() + " milisekund. Tworzę generację nr " + parameters.getGeneracjaIndex() );
+        //System.out.println( "Upłynęło " + parameters.getInterval() + " milisekund. Tworzę generację nr " + parameters.getIndexOfGenerations() );
 
         Mesh tmp = new Mesh(); //Mesh tymczasowa
 
@@ -79,7 +79,7 @@ public class AutomatKomorkowy implements Observer {
 
             for( int j=0; j < tmp.getNumberOfRows(); j++ ) {
 
-                if( tmp.getCell(i, j).getStan() != 0 )
+                if( tmp.getCell(i, j).getCondition() != 0 )
                     zasady.zmienStan( i, j, tmp.getCell(i, j) );
             }
         }

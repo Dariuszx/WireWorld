@@ -1,4 +1,4 @@
-package GUI.wizualizacja;
+package GUI.visualisation;
 
 
 import Data.Mesh;
