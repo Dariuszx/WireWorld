@@ -2,6 +2,8 @@ package Data;
 
 import Modules.ErrorHandling;
 
+import java.awt.*;
+
 public class Mesh {
 
     private Cell[][] mesh;
@@ -23,6 +25,7 @@ public class Mesh {
 
         this.numberOfColumns = liczbaKolumn;
         this.numberOfRows = liczbaWierszy;
+        this.isLoaded = true;
 
         mesh = new Cell[liczbaKolumn][liczbaWierszy];
 
@@ -89,6 +92,8 @@ public class Mesh {
         }
     }
 
+    public void setCondition( Dimension dim, int stan ) throws ErrorHandling { setCondition( dim.width, dim.height, stan ); }
+
     public void setLoaded( boolean flag ) {
 
         this.isLoaded = flag;
@@ -100,6 +105,15 @@ public class Mesh {
         this.numberOfColumns = 0;
         this.numberOfRows = 0;
         this.mesh = null;
+    }
+
+    public void setZero() throws ErrorHandling {
+
+        for( int i=0; i < numberOfColumns; i++ ) {
+            for ( int j=0; j < numberOfRows; j++ ) {
+                mesh[i][j].setCondition( 0 );
+            }
+        }
     }
 
 }

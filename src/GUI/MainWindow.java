@@ -183,6 +183,7 @@ public class MainWindow extends JFrame implements Observable, Observer {
 
         dialog.setVisible( true );
 
+        notifyObservers();
     }
 
     private void thisWindowClosing( WindowEvent e ) {

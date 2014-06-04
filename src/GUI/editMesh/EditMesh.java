@@ -22,59 +22,42 @@ public class EditMesh extends JDialog {
     private Parameters parameters;
     private MeshDrawing drawing;
     private JButton buttonPressed;
+    private MouseListener mouseListener;
+    private Mesh meshTmp;
 
     public EditMesh( Frame owner, Parameters parameters ) {
 
         super(owner);
         initComponents();
 
-        this.buttonPressed = buttonPusta;
         this.parameters = parameters;
+        this.drawing = new MeshDrawing();
+        this.meshTmp = new Mesh();
 
-        drawing = new MeshDrawing();
-
-        drawing.addMouseListener( new MouseListener() {
-            @Override
-            public void mouseClicked( MouseEvent mouseEvent ) {
-                System.out.println( mouseEvent.getX() + " " + mouseEvent.getY() );
-            }
-
-            @Override
-            public void mousePressed( MouseEvent mouseEvent ) {
-
-            }
-
-            @Override
-            public void mouseReleased( MouseEvent mouseEvent ) {
-
-            }
-
-            @Override
-            public void mouseEntered( MouseEvent mouseEvent ) {
-
-            }
-
-            @Override
-            public void mouseExited( MouseEvent mouseEvent ) {
-
-            }
-        });
-
-        if( !parameters.getIsMeshLoaded() ) { /* Jeżeli nie wczytano żadnej siatki, to rysuję domyślną */
-
-            try
+        try
+        {
+            if( !parameters.getIsMeshLoaded() ) /* Jeżeli nie wczytano żadnej siatki, to rysuję domyślną */
             {
-                Mesh tmp = new Mesh();
-                tmp.makeMesh( 40, 40 );
-                parameters.setMesh( tmp );
+                parameters.getMesh().makeMesh( 40, 40 );
+                parameters.getMesh().copyMesh( parameters.getGeneratedMesh() );
             }
-            catch( ErrorHandling e )
-            {
-                new ErrorHandlingDialog( this, e.toString() ).setVisible( true );
-            }
+
+            parameters.getGeneratedMesh().copyMesh( meshTmp );
+        }
+        catch ( ErrorHandling e )
+        {
+            new ErrorHandlingDialog( this, e.toString() ).setVisible( true );
         }
 
-        draw( parameters.getGeneratedMesh());
+
+        this.mouseListener = new MouseListener( meshTmp, drawing );
+
+        setButtonPressed(buttonPusta);
+        mouseListener.setButtonPressed( buttonPressed );
+
+        drawing.addMouseListener( mouseListener ); /* Nasłuchuję na panelu Canvas */
+
+        draw( meshTmp );
     }
 
     public EditMesh( Dialog owner ) {
@@ -92,17 +75,72 @@ public class EditMesh extends JDialog {
         drawing.setBounds(0, 0, 800, 800);
     }
 
-    private void panelCanvasMouseClicked( MouseEvent e ) {
 
-        System.out.println(e.getX() + " " + e.getY());
+    private void setButtonPressed( JButton button ) {
+
+        if( buttonPressed != null ) buttonPressed.setEnabled( true );
+        buttonPressed = button;
+        buttonPressed.setEnabled( false );
+
+        mouseListener.setButtonPressed( buttonPressed );
     }
 
-    private void panelCanvasMousePressed(MouseEvent e) {
-        System.out.println(e.getX() + " " + e.getY());
+    private void buttonGlowaActionPerformed( ActionEvent e ) { setButtonPressed( buttonGlowa ); }
+
+    private void buttonPrzewodnikActionPerformed( ActionEvent e ) { setButtonPressed( buttonPrzewodnik ); }
+
+    private void buttonOgonActionPerformed( ActionEvent e ) { setButtonPressed(buttonOgon); }
+
+    private void buttonPustaActionPerformed( ActionEvent e ) { setButtonPressed(buttonPusta); }
+
+    private void buttonDiodeActionPerformed( ActionEvent e ) { setButtonPressed( buttonDiode ); }
+
+    private void buttonXorActionPerformed(ActionEvent e) { setButtonPressed( buttonXor ); }
+
+    private void buttonWyczyscActionPerformed(ActionEvent e) {
+
+        try {
+
+            meshTmp.setZero();
+            drawing.repaint();
+
+        } catch ( ErrorHandling error ) {
+            new ErrorHandlingDialog( this, e.toString() ).setVisible( true );
+        }
     }
 
-    private void panelSiatkaMouseClicked(MouseEvent e) {
-        System.out.println( e.getX() + " " + e.getY() );
+    private void buttonResetujActionPerformed(ActionEvent e) {
+
+        try {
+
+            parameters.getGeneratedMesh().copyMesh(meshTmp);
+            drawing.repaint();
+
+        } catch ( ErrorHandling error ) {
+
+            new ErrorHandlingDialog(this, e.toString()).setVisible(true);
+        }
+    }
+
+    private void buttonZapiszActionPerformed(ActionEvent e) {
+
+        try {
+
+            meshTmp.copyMesh( parameters.getGeneratedMesh() );
+            this.setVisible( false );
+            this.dispose();
+
+        } catch ( ErrorHandling error ) {
+
+            new ErrorHandlingDialog(this, e.toString()).setVisible(true);
+        }
+
+    }
+
+    private void buttonWyjdzActionPerformed(ActionEvent e) {
+
+        this.setVisible( false );
+        this.dispose();
     }
 
     private void initComponents() {
@@ -114,6 +152,7 @@ public class EditMesh extends JDialog {
         buttonOgon = new JButton();
         buttonPrzewodnik = new JButton();
         buttonPusta = new JButton();
+        buttonXor = new JButton();
         panelSiatka = new JPanel();
         panelCanvas = new JPanel();
         panelNarzedzia = new JPanel();
@@ -141,18 +180,57 @@ public class EditMesh extends JDialog {
 
             //---- buttonDiode ----
             buttonDiode.setText("Diode");
+            buttonDiode.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    buttonDiodeActionPerformed(e);
+                }
+            });
 
             //---- buttonGlowa ----
             buttonGlowa.setText("G\u0142owa");
+            buttonGlowa.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    buttonGlowaActionPerformed(e);
+                }
+            });
 
             //---- buttonOgon ----
             buttonOgon.setText("Ogon");
+            buttonOgon.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    buttonOgonActionPerformed(e);
+                }
+            });
 
             //---- buttonPrzewodnik ----
             buttonPrzewodnik.setText("Przewodnik");
+            buttonPrzewodnik.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    buttonPrzewodnikActionPerformed(e);
+                }
+            });
 
             //---- buttonPusta ----
             buttonPusta.setText("Pusta");
+            buttonPusta.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    buttonPustaActionPerformed(e);
+                }
+            });
+
+            //---- buttonXor ----
+            buttonXor.setText("XOR");
+            buttonXor.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    buttonXorActionPerformed(e);
+                }
+            });
 
             GroupLayout panelPrzybornikLayout = new GroupLayout(panelPrzybornik);
             panelPrzybornik.setLayout(panelPrzybornikLayout);
@@ -161,11 +239,12 @@ public class EditMesh extends JDialog {
                     .addGroup(panelPrzybornikLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(panelPrzybornikLayout.createParallelGroup()
-                            .addComponent(buttonGlowa, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
-                            .addComponent(buttonPrzewodnik, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
-                            .addComponent(buttonOgon, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
-                            .addComponent(buttonPusta, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
-                            .addComponent(buttonDiode, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
+                            .addComponent(buttonGlowa, GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                            .addComponent(buttonPrzewodnik, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                            .addComponent(buttonOgon, GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                            .addComponent(buttonPusta, GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                            .addComponent(buttonDiode, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                            .addComponent(buttonXor, GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE))
                         .addContainerGap())
             );
             panelPrzybornikLayout.setVerticalGroup(
@@ -178,9 +257,11 @@ public class EditMesh extends JDialog {
                         .addComponent(buttonOgon)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonPusta)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonDiode)
-                        .addContainerGap())
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buttonXor)
+                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             );
         }
 
@@ -195,7 +276,7 @@ public class EditMesh extends JDialog {
                 panelCanvas.setLayout(panelCanvasLayout);
                 panelCanvasLayout.setHorizontalGroup(
                     panelCanvasLayout.createParallelGroup()
-                        .addGap(0, 502, Short.MAX_VALUE)
+                        .addGap(0, 500, Short.MAX_VALUE)
                 );
                 panelCanvasLayout.setVerticalGroup(
                     panelCanvasLayout.createParallelGroup()
@@ -226,15 +307,39 @@ public class EditMesh extends JDialog {
 
             //---- buttonWyczysc ----
             buttonWyczysc.setText("Wyczy\u015b\u0107");
+            buttonWyczysc.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    buttonWyczyscActionPerformed(e);
+                }
+            });
 
             //---- buttonResetuj ----
             buttonResetuj.setText("Resetuj");
+            buttonResetuj.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    buttonResetujActionPerformed(e);
+                }
+            });
 
             //---- buttonZapisz ----
             buttonZapisz.setText("Zapisz");
+            buttonZapisz.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    buttonZapiszActionPerformed(e);
+                }
+            });
 
             //---- buttonWyjdz ----
             buttonWyjdz.setText("Wyjd\u017a");
+            buttonWyjdz.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    buttonWyjdzActionPerformed(e);
+                }
+            });
 
             GroupLayout panelNarzedziaLayout = new GroupLayout(panelNarzedzia);
             panelNarzedzia.setLayout(panelNarzedziaLayout);
@@ -242,18 +347,13 @@ public class EditMesh extends JDialog {
                 panelNarzedziaLayout.createParallelGroup()
                     .addGroup(panelNarzedziaLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(panelNarzedziaLayout.createParallelGroup()
-                            .addGroup(panelNarzedziaLayout.createSequentialGroup()
-                                .addGroup(panelNarzedziaLayout.createParallelGroup()
-                                    .addComponent(buttonWyczysc, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(buttonResetuj, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(GroupLayout.Alignment.TRAILING, panelNarzedziaLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addGroup(panelNarzedziaLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(buttonZapisz, GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
-                                    .addComponent(buttonWyjdz, GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE))))
-                        .addContainerGap())
+                        .addGroup(panelNarzedziaLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                            .addComponent(buttonZapisz, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(buttonWyjdz, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelNarzedziaLayout.createParallelGroup()
+                                .addComponent(buttonWyczysc, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(buttonResetuj, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             );
             panelNarzedziaLayout.setVerticalGroup(
                 panelNarzedziaLayout.createParallelGroup()
@@ -261,11 +361,11 @@ public class EditMesh extends JDialog {
                         .addComponent(buttonWyczysc)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonResetuj)
-                        .addGap(66, 66, 66)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
                         .addComponent(buttonZapisz)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonWyjdz)
-                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
             );
         }
 
@@ -276,12 +376,10 @@ public class EditMesh extends JDialog {
                 .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(panelSiatka, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(contentPaneLayout.createParallelGroup()
-                        .addComponent(panelNarzedzia, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                            .addGap(0, 0, Short.MAX_VALUE)
-                            .addComponent(panelPrzybornik, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(panelPrzybornik, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(panelNarzedzia, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
@@ -291,7 +389,7 @@ public class EditMesh extends JDialog {
                     .addGroup(contentPaneLayout.createParallelGroup()
                         .addComponent(panelSiatka, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addComponent(panelPrzybornik, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(panelPrzybornik, GroupLayout.PREFERRED_SIZE, 231, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(panelNarzedzia, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addContainerGap())
@@ -309,6 +407,7 @@ public class EditMesh extends JDialog {
     private JButton buttonOgon;
     private JButton buttonPrzewodnik;
     private JButton buttonPusta;
+    private JButton buttonXor;
     private JPanel panelSiatka;
     private JPanel panelCanvas;
     private JPanel panelNarzedzia;

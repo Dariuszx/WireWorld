@@ -4,37 +4,47 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq t {space :::p, comp panelSiatka:::::x, space :::p, par l {comp panelNarzedzia:::::x, seq t {space :0:0:x, comp panelPrzybornik:::p::p}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, par l {comp panelSiatka:::::x, seq {comp panelPrzybornik:::p::p, space :::p, comp panelNarzedzia:::::x}}, space :::p}}"
+			"$horizontalGroup": "par l {seq t {space :::p, comp panelSiatka:::::x, space :::x, par l {comp panelPrzybornik:::p::p, comp panelNarzedzia:::::x}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l {comp panelSiatka:::::x, seq {comp panelPrzybornik:::p:231:p, space :::p, comp panelNarzedzia:::::x}}, space :::p}}"
 		} ) {
 			name: "this"
 			"title": "Edytuj siatkę"
 			"modal": true
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-				"$horizontalGroup": "par l {seq {space :::p, par l {comp buttonGlowa::l::134:x, comp buttonPrzewodnik::t::134:x, comp buttonOgon::l::134:x, comp buttonPusta::l::134:x, comp buttonDiode::l::134:x}, space :::p}}"
-				"$verticalGroup": "par l {seq t {comp buttonGlowa:::p::p, space :::p, comp buttonPrzewodnik:::p::p, space :::p, comp buttonOgon:::p::p, space :::p, comp buttonPusta:::p::p, space :::x, comp buttonDiode:::p::p, space :::p}}"
+				"$horizontalGroup": "par l {seq {space :::p, par l {comp buttonGlowa::l::136:x, comp buttonPrzewodnik::t::136:x, comp buttonOgon::l::136:x, comp buttonPusta::l::136:x, comp buttonDiode::t::136:x, comp buttonXor::l::136:x}, space :::p}}"
+				"$verticalGroup": "par l {seq t {comp buttonGlowa:::p::p, space :::p, comp buttonPrzewodnik:::p::p, space :::p, comp buttonOgon:::p::p, space :::p, comp buttonPusta:::p::p, space :::p, comp buttonDiode:::p::p, space :::p, comp buttonXor:::p::p, space :::x}}"
 			} ) {
 				name: "panelPrzybornik"
 				"border": new javax.swing.border.TitledBorder( "Przybornik" )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "buttonDiode"
 					"text": "Diode"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonDiodeActionPerformed", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "buttonGlowa"
 					"text": "Głowa"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonGlowaActionPerformed", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "buttonOgon"
 					"text": "Ogon"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonOgonActionPerformed", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "buttonPrzewodnik"
 					"text": "Przewodnik"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrzewodnikActionPerformed", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "buttonPusta"
 					"text": "Pusta"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPustaActionPerformed", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonXor"
+					"text": "XOR"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonXorActionPerformed", true ) )
 				} )
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
@@ -44,38 +54,42 @@ new FormModel {
 				name: "panelSiatka"
 				"border": new javax.swing.border.TitledBorder( "Siatka" )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-					"$horizontalGroup": "par l {space :0:502:x}"
+					"$horizontalGroup": "par l {space :0:500:x}"
 					"$verticalGroup": "par l {space :0:0:x}"
 				} ) {
 					name: "panelCanvas"
 				} )
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-				"$horizontalGroup": "par l {seq {space :::p, par l {seq {par l {comp buttonWyczysc::l:p:134:p, comp buttonResetuj::l:p:134:p}, space :0:0:x}, seq t {space :0:0:x, par l:::p {comp buttonZapisz::::91:x, comp buttonWyjdz::::91:x}}}, space :::p}}"
-				"$verticalGroup": "par l {seq l {comp buttonWyczysc:::p::p, space :::p, comp buttonResetuj:::p::p, space :p:66:p, comp buttonZapisz:::p::p, space :::p, comp buttonWyjdz:::p::p, space :::x}}"
+				"$horizontalGroup": "par l {seq l {space :::p, par t {comp buttonZapisz:::p:91:p, comp buttonWyjdz:::p:91:p, par l {comp buttonWyczysc::l:p:134:p, comp buttonResetuj::l:p:134:p}}, space :::x}}"
+				"$verticalGroup": "par l {seq l {comp buttonWyczysc:::p::p, space :::p, comp buttonResetuj:::p::p, space ::81:x, comp buttonZapisz:::p::p, space :::p, comp buttonWyjdz:::p::p, space :::p}}"
 			} ) {
 				name: "panelNarzedzia"
 				"border": new javax.swing.border.TitledBorder( "Narzędzia" )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "buttonWyczysc"
 					"text": "Wyczyść"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonWyczyscActionPerformed", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "buttonResetuj"
 					"text": "Resetuj"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonResetujActionPerformed", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "buttonZapisz"
 					"text": "Zapisz"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonZapiszActionPerformed", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "buttonWyjdz"
 					"text": "Wyjdź"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonWyjdzActionPerformed", true ) )
 				} )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 5, 0 )
-			"size": new java.awt.Dimension( 710, 470 )
+			"size": new java.awt.Dimension( 710, 515 )
 		} )
 	}
 }

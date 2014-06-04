@@ -40,7 +40,7 @@ public class Visualisation extends JDialog implements Observable, Runnable {
 
         drawing = new MeshDrawing();
 
-        draw(parameters.getMesh());
+        draw( parameters.getGeneratedMesh() );
 
         if( parameters.getMesh() != null ) {
             buttonStart.setEnabled( true );
