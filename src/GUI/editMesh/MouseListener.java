@@ -73,27 +73,27 @@ public class MouseListener implements java.awt.event.MouseListener {
         {
             if ( buttonPressed.getText().equals( "Głowa" ) )
             {
-                mesh.setCondition(dim, 1);
+                mesh.setSpecifiedCellType( dim, "head" );
             }
             else if( buttonPressed.getText().equals( "Przewodnik" ) )
             {
-                mesh.setCondition(dim, 3);
+                mesh.setSpecifiedCellType( dim, "conductor" );
             }
             else if( buttonPressed.getText().equals( "Ogon" ) )
             {
-                mesh.setCondition(dim, 2);
+                mesh.setSpecifiedCellType( dim, "tail" );
             }
             else if( buttonPressed.getText().equals("Pusta") )
             {
-                mesh.setCondition(dim, 0);
+                mesh.setSpecifiedCellType( dim, "empty" );
             }
             else if( buttonPressed.getText().equals("Diode") )
             {
-                drawDiode( dim );
+                mesh.setSpecifiedCellType( dim, "diode" );
             }
             else if( buttonPressed.getText().equals("XOR") )
             {
-                drawXor( dim );
+                mesh.setSpecifiedCellType( dim, "xor" );
             }
         }
         catch ( ErrorHandling errorHandling )
@@ -101,54 +101,5 @@ public class MouseListener implements java.awt.event.MouseListener {
             return false;
         }
         return true;
-    }
-
-    private void drawDiode( Dimension dim ) {
-
-        try {
-
-            mesh.setCondition( dim, 3 );
-            mesh.setCondition( dim.width, dim.height - 1, 3 );
-            mesh.setCondition( dim.width, dim.height - 2, 3 );
-            mesh.setCondition( dim.width + 1, dim.height, 3 );
-            mesh.setCondition( dim.width + 1, dim.height - 2, 3 );
-
-        } catch( ErrorHandling e ) {
-
-        }
-    }
-
-    private void drawXor( Dimension dim ) {
-
-        try {
-
-            mesh.setCondition( dim, 3 );
-            mesh.setCondition( dim.width, dim.height - 6, 3 );
-
-            mesh.setCondition( dim.width + 1, dim.height, 3 );
-            mesh.setCondition( dim.width + 1, dim.height - 2, 3 );
-            mesh.setCondition( dim.width + 1, dim.height - 3, 3 );
-            mesh.setCondition( dim.width + 1, dim.height - 4, 3 );
-            mesh.setCondition( dim.width + 1, dim.height - 6, 3 );
-
-            mesh.setCondition( dim.width + 2, dim.height - 1, 3 );
-            mesh.setCondition( dim.width + 2, dim.height - 2, 3 );
-            mesh.setCondition( dim.width + 2, dim.height - 4, 3 );
-            mesh.setCondition( dim.width + 2, dim.height - 5, 3 );
-
-            mesh.setCondition( dim.width + 3, dim.height - 2, 3 );
-            mesh.setCondition( dim.width + 3, dim.height - 4, 3 );
-
-            mesh.setCondition( dim.width + 4, dim.height - 2, 3 );
-            mesh.setCondition( dim.width + 4, dim.height - 3, 3 );
-            mesh.setCondition( dim.width + 4, dim.height - 4, 3 );
-
-            mesh.setCondition( dim.width + 5, dim.height - 3, 3 );
-            mesh.setCondition( dim.width + 6, dim.height - 3, 3 );
-
-        } catch( ErrorHandling e ) {
-
-        }
-
     }
 }

@@ -56,6 +56,7 @@ public class Mesh {
         }
     }
 
+
     /* GET FUNCTIONS */
     public int getNumberOfRows() {
         return numberOfRows;
@@ -116,4 +117,73 @@ public class Mesh {
         }
     }
 
+    public boolean setSpecifiedCellType( Dimension dim, String type ) throws ErrorHandling {
+
+        if( type.equals( "empty" ) )
+        {
+
+            this.setCondition(dim, 0);
+
+        }
+        else if( type.equals( "head" ) )
+        {
+
+            this.setCondition(dim, 1);
+
+        }
+        else if( type.equals( "tail" ) )
+        {
+
+            this.setCondition(dim, 2);
+
+        }
+        else if( type.equals( "conductor" ) )
+        {
+
+            this.setCondition(dim, 3);
+
+        }
+        else if( type.equals( "diode" ) )
+        {
+
+            this.setCondition( dim, 3 );
+            this.setCondition( dim.width, dim.height - 1, 3 );
+            this.setCondition( dim.width, dim.height - 2, 3 );
+            this.setCondition( dim.width + 1, dim.height, 3 );
+            this.setCondition( dim.width + 1, dim.height - 2, 3 );
+
+        }
+        else if( type.equals( "xor" ) )
+        {
+
+            this.setCondition( dim, 3 );
+            this.setCondition( dim.width, dim.height - 6, 3 );
+
+            this.setCondition( dim.width + 1, dim.height, 3 );
+            this.setCondition( dim.width + 1, dim.height - 2, 3 );
+            this.setCondition( dim.width + 1, dim.height - 3, 3 );
+            this.setCondition( dim.width + 1, dim.height - 4, 3 );
+            this.setCondition( dim.width + 1, dim.height - 6, 3 );
+
+            this.setCondition( dim.width + 2, dim.height - 1, 3 );
+            this.setCondition( dim.width + 2, dim.height - 2, 3 );
+            this.setCondition( dim.width + 2, dim.height - 4, 3 );
+            this.setCondition( dim.width + 2, dim.height - 5, 3 );
+
+            this.setCondition( dim.width + 3, dim.height - 2, 3 );
+            this.setCondition( dim.width + 3, dim.height - 4, 3 );
+
+            this.setCondition( dim.width + 4, dim.height - 2, 3 );
+            this.setCondition( dim.width + 4, dim.height - 3, 3 );
+            this.setCondition( dim.width + 4, dim.height - 4, 3 );
+
+            this.setCondition( dim.width + 5, dim.height - 3, 3 );
+            this.setCondition( dim.width + 6, dim.height - 3, 3 );
+        }
+
+        else {
+            return false;
+        }
+        return true;
+    }
 }

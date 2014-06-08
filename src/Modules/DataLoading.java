@@ -4,6 +4,7 @@ import Data.Events;
 import Data.Mesh;
 import Data.Parameters;
 
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
@@ -26,9 +27,6 @@ public class DataLoading implements Observer {
             try {
 
                 parameters.getMesh().setLoaded( false );
-
-                //parameters.getMesh().setNull();
-                //parameters.getGeneratedMesh().setNull();
 
                 //Muszę na nowo otworzyć plik
                 file.openFile( parameters.getPathToSourceFileMesh() );
@@ -111,19 +109,30 @@ public class DataLoading implements Observer {
         Scanner row = new Scanner( line );
 
         int wordIndex = 0; /* Licznik słów */
-        int x=0, y=0, condition=0;
+        int x=0, y=0;
 
         while( row.hasNext() ) {
 
             if( wordIndex == 0 ) x = Integer.parseInt( row.next() );
             else if( wordIndex == 1 ) y = Integer.parseInt( row.next() );
-            else if( wordIndex == 2 ) condition = Integer.parseInt( row.next() );
+            else if( wordIndex == 2 ) {
+
+                String word = row.next(); /* Tutaj przechowuję przeczytany 3 wyraz z wiersza */
+
+                /* Sprawdzam czy 3 wyraz nie jest jakimś słowem
+                   kluczowym typu: tail, head, xor, diode itp. Jeżeli nie to ustawiam normalnie wartość
+                */
+                if( !mesh.setSpecifiedCellType( new Dimension( x, y ), word ) )
+                {
+                    /* Ustawiam konkretny stan komórki na konkretnej pozycji */
+                    mesh.setCondition(x, y, Integer.parseInt( word ) );
+                }
+
+            }
             else break;
 
-            wordIndex++;
+            wordIndex++; /* Zwiększam licznik aktualnie czytanego słowa */
         }
-
-        mesh.setCondition(x, y, condition); /* Ustawiam konkretny stan komórki na konkretnej pozycji */
 
         row.close();
     }
