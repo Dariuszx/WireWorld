@@ -5,6 +5,12 @@ import Modules.DataLoading;
 import Modules.DataSaving;
 
 
+/*
+    Przepraszam, że program wygląda tak jak wygląda. Troche głupio mi to mówić, ale
+    miałem problemy z czasem, aby jakoś rozsądnie zaplanowac sobie etapy budowania programu.
+    Obiecuję poprawę, wraz z następnymi zajęciami (:(:
+ */
+
 public class Main {
 
     public static void main( String[] args ) {
